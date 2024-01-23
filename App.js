@@ -37,28 +37,6 @@ export default function App() {
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
   };
-  // useEffect(() => {
-  //   // Create table if not exists
-  //   db.transaction(tx => {
-  //     tx.executeSql(
-  //       'CREATE TABLE IF NOT EXISTS Messages (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT, volume INTEGER DEFAULT 0)',
-  //       [],
-  //       () => {
-  //         // Success callback (optional)
-  //         console.log('Table created successfully');
-  //         // Fetch data from the database when component mounts
-  //         fetchMessages();
-  //       },
-  //       (_, error) => {
-  //         // Error callback
-  //         console.error('Error creating table:', error);
-  //       }
-  //     );
-  //   });
-  
-  //   // Fetch data from the database on app reload
-  //   fetchMessages();
-  // }, []);
 
   const fetchMessages = () => { //Handels error logging if database doesnt open
     db.transaction(tx => {
@@ -77,33 +55,6 @@ export default function App() {
     });
   };
 
-  // const handleAdd = () => {
-  //   const newMessage = 'added';
-  //   const newVolume = 250;
-  //   db.transaction(tx => {
-  //     tx.executeSql(
-  //       'INSERT INTO Messages (content, volume) VALUES (?, ?)',
-  //       [newMessage],
-  //       (_, { insertId }) => {
-  //         console.log('Added to database with ID: ', insertId);
-  //         fetchMessages(); // Fetch updated messages after adding
-  //       },
-  //       (_, error) => {
-  //         console.log('Error adding to database: ', error);
-  //       }
-  //     );
-  //   });
-  // };
-
-  // const handleAddTask = () => {
-  //   Keyboard.dismiss();
-  //   const newDrink = `${drinkName} ${drinkVolume}`; // Remove the '-' and 'ml'
-  //   setTaskItems([...taskItems, newDrink]);
-  //   setDrinkName('');
-  //   setDrinkVolume('');
-  //   setIsAddMode(false);
-  //   handleAdd();
-  // };
   const handleAddTask = () => {
     Keyboard.dismiss();
     const newDrink = `${drinkName} ${drinkVolume}`; // Remove the '-' and 'ml'
