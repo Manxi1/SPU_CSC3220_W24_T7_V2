@@ -8,7 +8,16 @@ const Drink = (props) => {
     textToSplit = String(textToSplit); // Convert to string if not already a string
   }
 
-  let [drink, volume] = textToSplit.split(' ');
+  console.log('-----------');
+  console.log('props.text:', props.text);
+  console.log('textToSplit:', textToSplit);
+
+  //let [drink, volume] = textToSplit.split(' ');
+  let [drink, volume] = textToSplit.split(/(?<=.*)\s(?=\d+$)/);
+
+
+  console.log('drink:', drink);
+  console.log('volume:', volume);
 
   if (!volume) {
     drink = textToSplit;
