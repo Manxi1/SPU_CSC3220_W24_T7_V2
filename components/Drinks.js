@@ -3,41 +3,41 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Drink = (props) => {
-  let textToSplit = props.text || '';
-  if (typeof textToSplit !== 'string') {
-    textToSplit = String(textToSplit); // Convert to string if not already a string
-  }
+  // let textToSplit = props.text || '';
+  // if (typeof textToSplit !== 'string') {
+  //   textToSplit = String(textToSplit); // Convert to string if not already a string
+  // }
 
-  console.log('-----------');
-  console.log('props.text:', props.text);
-  console.log('textToSplit:', textToSplit);
+  // console.log('-----------');
+  // console.log('props.text:', props.text);
+  // console.log('textToSplit:', textToSplit);
 
-  //let [drink, volume] = textToSplit.split(' ');
-  let [drink, volume] = textToSplit.split(/(?<=.*)\s(?=\d+$)/);
+  // //let [drink, volume] = textToSplit.split(' ');
+  // let [drink, volume] = textToSplit.split(/(?<=.*)\s(?=\d+$)/);
 
 
-  console.log('drink:', drink);
-  console.log('volume:', volume);
+  // console.log('drink:', drink);
+  // console.log('volume:', volume);
 
-  if (!volume) {
-    drink = textToSplit;
-    volume = '';
-  }
+  // if (!volume) {
+  //   drink = textToSplit;
+  //   volume = '';
+  // }
 
-  const handleDeleteItem = () => {
-    props.handleDelete(props.id); // Call the handleDelete function with the appropriate ID
+  const handleDeleteItem = (index) => {
+    props.completeTask(index); // Call the handleDelete function with the appropriate ID
   };
 
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>
-        <TouchableOpacity onPress={handleDeleteItem}>
+        <TouchableOpacity onPress={() => handleDeleteItem(props.index)}>
           <View style={styles.square}>
             <Icon name="trash-alt" size={24} color="#000000" />
           </View>
         </TouchableOpacity>
-        <Text style={styles.itemText}>{drink}</Text>
-        {!!volume && <Text style={styles.itemText}> {volume}ml</Text>}
+        <Text style={styles.itemText}>{props.drink}</Text>
+        {!!props.volume && <Text style={styles.itemText}> {props.volume}ml</Text>}
       </View>
       <View style={styles.menu}>
         <TouchableOpacity onPress={() => console.log('Menu clicked')}>
@@ -54,11 +54,10 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
-    width: '80%',
-    left: 45,
+    width: '70',
   },
   itemLeft: {
     flexDirection: 'row',
@@ -73,6 +72,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 9,
     paddingRight: 1,
+    marginRight: 10,
   },
   itemText: {
     maxWidth: '80%',
@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
   },
   menu: {
     paddingRight: 1,
+    marginTop: 5,
   },
 });
 
