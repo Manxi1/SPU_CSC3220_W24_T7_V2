@@ -211,14 +211,14 @@ export default function App() {
                 </TouchableOpacity>
                 <View style={styles.MenuItemes}>
                   
-                  <TouchableOpacity style={[styles.MenuItemes, { marginBottom: 1 }]}> {/*Removed onPress={console.log('clicked')}*/}
+                  <TouchableOpacity onPress={() => console.log('clicked')} style={[styles.MenuItemes, { marginBottom: 1 }]}>
                     <Text style={styles.MenuItemestext}>Home</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}> {/*Removed onPress={console.log('clicked')}*/}
+                  <TouchableOpacity onPress={() => console.log('clicked')} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
                     <Text style={styles.MenuItemestext}>Settings</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={[styles.MenuItemes, { flex: 18, marginTop:2}]}> {/*Removed onPress={console.log('clicked')}*/}
+                  <TouchableOpacity onPress={() => console.log('clicked')} style={[styles.MenuItemes, { flex: 18, marginTop:2}]}>
                     <Text style={styles.MenuItemestext}>About</Text>
                   </TouchableOpacity>
 
