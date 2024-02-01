@@ -78,7 +78,7 @@ export default function App() {
     db.transaction(tx => {
       tx.executeSql(
         'INSERT INTO Messages (content, volume) VALUES (?, ?)',
-        [newDrink, parseInt(drinkVolume)],
+        [drinkName, parseInt(drinkVolume)],
         (_, { insertId }) => {
           console.log('Added to database with ID: ', insertId);
           fetchMessages(); // Fetch updated messages after adding
@@ -135,13 +135,27 @@ export default function App() {
               <View style={styles.DrinkWrapper}>
                 <Text style={styles.sectionTitle}> Daily Gulp</Text>
                 <View style={styles.items}>
-                  {messages.map((item, index) => (
+                  {/* {messages.map((item, index) => (
                     <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                      <Drink text={`${item.content} ${item.volume}`} />
-                      </TouchableOpacity>
+                      <Drink text={`${item.content} ${item.volume}`} completeTask={completeTask} index={index} />
+                    </TouchableOpacity>
+                  ))} */}
+                  {/* {messages.map((item, index) => (
+                    <TouchableOpacity key={index} onPress={() => completeTask(index)}>
+                      <Drink drink={item.content} volume={item.volume} completeTask={completeTask} index={index} />
+                    </TouchableOpacity>
+                  ))} */}
+                  {messages.map((item, index) => (
+                    <Drink 
+                      key={index} 
+                      drink={item.content} 
+                      volume={item.volume} 
+                      completeTask={() => completeTask(index)} 
+                      index={index} 
+                    />
                   ))}
                 </View>
-            </View>
+              </View>
           
 
             
@@ -197,14 +211,14 @@ export default function App() {
                 </TouchableOpacity>
                 <View style={styles.MenuItemes}>
                   
-                  <TouchableOpacity onPress={console.log('clicked')} style={[styles.MenuItemes, { marginBottom: 1 }]}>
+                  <TouchableOpacity style={[styles.MenuItemes, { marginBottom: 1 }]}> {/*Removed onPress={console.log('clicked')}*/}
                     <Text style={styles.MenuItemestext}>Home</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={console.log('clicked')} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
+                  <TouchableOpacity style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}> {/*Removed onPress={console.log('clicked')}*/}
                     <Text style={styles.MenuItemestext}>Settings</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity onPress={console.log('clicked')} style={[styles.MenuItemes, { flex: 18, marginTop:2}]}>
+                  <TouchableOpacity style={[styles.MenuItemes, { flex: 18, marginTop:2}]}> {/*Removed onPress={console.log('clicked')}*/}
                     <Text style={styles.MenuItemestext}>About</Text>
                   </TouchableOpacity>
 
