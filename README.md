@@ -1,15 +1,15 @@
+# App Name
+
+SipLog
+
 # Team Members
 
 1. Manxi Muhirwa
-   Github user:Manxi1
+   - Github user: Manxi1
 2. Weston Hanson
-   Github user:WestonHanson
+   - Github user: WestonHanson
 3. Caed Osborn-Nienhuis
-   Github user:
-
-# App Name
-
-    -SipLog
+   - Github user: caedosbornneinhuis
 
 # About
 
