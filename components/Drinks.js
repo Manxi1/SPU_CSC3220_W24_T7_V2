@@ -3,26 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Drink = (props) => {
-  // let textToSplit = props.text || '';
-  // if (typeof textToSplit !== 'string') {
-  //   textToSplit = String(textToSplit); // Convert to string if not already a string
-  // }
-
-  // console.log('-----------');
-  // console.log('props.text:', props.text);
-  // console.log('textToSplit:', textToSplit);
-
-  // //let [drink, volume] = textToSplit.split(' ');
-  // let [drink, volume] = textToSplit.split(/(?<=.*)\s(?=\d+$)/);
-
-
-  // console.log('drink:', drink);
-  // console.log('volume:', volume);
-
-  // if (!volume) {
-  //   drink = textToSplit;
-  //   volume = '';
-  // }
 
   const handleDeleteItem = (index) => {
     props.completeTask(index); // Call the handleDelete function with the appropriate ID
