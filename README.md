@@ -13,4 +13,8 @@
 
 # About
 
-This app help will user track their drinks they took through out the day this app will track things like calories , caffein and many more , the app will designing using Js React native and it will run in the Androids.
+This app help will user track their drink in take throughout the day. It will track things like calories, caffein, sugar, and much more.
+
+The app will be designed using Js React native and it will run in the Androids.
+
+Design elements and more can be found in the Design folder.
