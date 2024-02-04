@@ -223,25 +223,25 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container: { // Wraps whole app
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop:50,
+    backgroundColor: '#fff', // White background
+    alignItems: 'center', // Center items horizontally
+    justifyContent: 'space-between', // Evenly space items vertically
+    paddingTop: 50, // Add padding to the top of the app
   },
-  changefont:{
+  changefont:{ //Sets font of app
     fontFamily: 'Roboto',
     fontSize:30,
     fontWeight:'bold',
   },
-  buttonContainer:{
+  buttonContainer:{ //Wraps the + button
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 76,
+    marginBottom: 76, // Adjust this value to move the button up or down on the page
   },
-  roundButton: {
+  roundButton: { // + button
     width: 70,
     height: 70,
     justifyContent: 'center',
@@ -250,42 +250,40 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     backgroundColor: '#ff5722',
   },
-  buttonText: {
+  buttonText: { // + button text
     color: 'white',
     fontSize: 30,
     
   },
-  menuButton: {
+  menuButton: { // Menu button
     position: 'absolute',
-    top: 50,
-    left: 20,
+    top: 50, // Adjust this value to move the button up or down on the page
+    left: 20, // Adjust this value to move the button left or right on the page
   },
-  
-  menuText: {
+  menuText: { // Text for the menu button
     fontSize: 30,
     color: '#000',
-    
   },
-  sectionTitle: {
+  sectionTitle: { // Title of the app
     fontSize: 24,
     fontWeight: 'bold',
   },
-  DrinkWrapper: {
-    paddingTop: 5,
-    paddingHorizontal: 20,
-    width: '100%',
+  DrinkWrapper: { // Wraps the drinks
+    paddingTop: 5, // Add padding to the top of the app
+    paddingHorizontal: 20, // Add padding to the left and right of the app
+    width: '100%', // Make the wrapper take up the full width of the screen
     justifyContent: 'center',
     alignItems: 'center',
   },
-  items: {
-    marginTop: 30,
+  items: { // Wraps the drinks
+    marginTop: 30, // Add margin to the top of the drinks
   },
-  modalContainer: {
+  modalContainer: { // Wraps the drinks
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  addWrapper:{
+  addWrapper:{ // Adding drinks section
     width: 70,
     height: 50,
     justifyContent: 'center',
