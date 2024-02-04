@@ -135,16 +135,6 @@ export default function App() {
               <View style={styles.DrinkWrapper}>
                 <Text style={styles.sectionTitle}> Daily Gulp</Text>
                 <View style={styles.items}>
-                  {/* {messages.map((item, index) => (
-                    <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                      <Drink text={`${item.content} ${item.volume}`} completeTask={completeTask} index={index} />
-                    </TouchableOpacity>
-                  ))} */}
-                  {/* {messages.map((item, index) => (
-                    <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                      <Drink drink={item.content} volume={item.volume} completeTask={completeTask} index={index} />
-                    </TouchableOpacity>
-                  ))} */}
                   {messages.map((item, index) => (
                     <Drink 
                       key={index} 
@@ -217,7 +207,6 @@ export default function App() {
                   <TouchableOpacity onPress={() => console.log('clicked')} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
                     <Text style={styles.MenuItemestext}>Settings</Text>
                   </TouchableOpacity>
-
                   <TouchableOpacity onPress={() => console.log('clicked')} style={[styles.MenuItemes, { flex: 18, marginTop:2}]}>
                     <Text style={styles.MenuItemestext}>About</Text>
                   </TouchableOpacity>

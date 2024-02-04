@@ -1,15 +1,20 @@
+# App Name
+
+SipLog
+
 # Team Members
 
 1. Manxi Muhirwa
-     Github user:Manxi1
+   - Github user: Manxi1
 2. Weston Hanson
-    Github user:WestonHanson
+   - Github user: WestonHanson
 3. Caed Osborn-Nienhuis
-    Github user:
-# App Name
-    -SipLog
+   - Github user: caedosbornneinhuis
 
 # About
-This app help will user track their  drinks they took through out the day this app will track things like calories , caffein and many more , the app will designing using Js React native and it will run in the Androids. 
- 
-![image_123655411](https://github.com/Manxi1/SPU_CSC3220_W24_T7/assets/121981035/92bbfd2d-96d5-4f93-bebf-efe6aa29364b)
+
+This app help will user track their drink in take throughout the day. It will track things like calories, caffein, sugar, and much more.
+
+The app will be designed using Js React native and it will run in the Androids.
+
+Design elements and more can be found in the Design folder.
