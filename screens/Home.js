@@ -205,7 +205,7 @@ export default function HomeScreen({ navigation }) {
                 </TouchableOpacity>
                 <View style={styles.MenuItemes}>
                   
-                  <TouchableOpacity onPress={() => navigation.navigate("Home")} style={[styles.MenuItemes, { marginBottom: 1 }]}>
+                  <TouchableOpacity onPress={toggleMenu} style={[styles.MenuItemes, { marginBottom: 1 }]}>
                     <Text style={styles.MenuItemestext}>Home</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => console.log('Clicked')} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
