@@ -1,21 +1,3 @@
-<<<<<<< Updated upstream
-import React, { useState, useEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView, Modal,Button } from 'react-native';
-import Drink from './components/Drinks.js';
-import { StatusBar } from 'expo-status-bar';
-import * as SQLite from 'expo-sqlite';
-import Icon from 'react-native-vector-icons/FontAwesome5'; 
-import {styles} from './app/styles.js';
-
-export default function App() {
-  const [drinkName, setDrinkName] = useState('');
-  const [drinkVolume, setDrinkVolume] = useState('');
-  const [taskItems, setTaskItems] = useState([]);
-  const [isAddMode, setIsAddMode] = useState(false);
-  const [messages, setMessages] = useState([]);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const db = SQLite.openDatabase('siplogdb.db'); //Database constant
-=======
 import React, { useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet, Modal, View, Button} from 'react-native';
 import { NavigationContainerRef, NavigationContainer, useNavigation } from '@react-navigation/native';
@@ -28,7 +10,6 @@ import styles from './app/styles';
 const Stack = createNativeStackNavigator(); 
 
 export default function App() {
->>>>>>> Stashed changes
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
