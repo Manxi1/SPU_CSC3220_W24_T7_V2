@@ -6,6 +6,8 @@ import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5'; 
 import {styles} from './styles.js';
 
+//Added comment
+
 export default function App() {
   const [drinkName, setDrinkName] = useState(''); 
   const [drinkVolume, setDrinkVolume] = useState('');
