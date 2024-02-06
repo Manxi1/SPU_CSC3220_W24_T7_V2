@@ -48,7 +48,7 @@ export default function App() {
                 />
             </Stack.Navigator>
 
-            <Modal
+            {/* <Modal
                     animationType="fade"
                     transparent={true}
                     visible={isMenuOpen}
@@ -74,7 +74,7 @@ export default function App() {
                         </View>
                     </View>
                     
-                </Modal>
+                </Modal> */}
 
         </NavigationContainer>
     );
