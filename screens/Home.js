@@ -4,7 +4,7 @@ import Drink from '../components/Drinks.js';
 import { StatusBar } from 'expo-status-bar';
 import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import styles from '../app/styles';
+import styles from '../styles.js';
 
 export default function HomeScreen({ navigation }) {
 
