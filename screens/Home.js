@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView, Modal,Button } from 'react-native';
-import Drink from './components/Drinks.js';
+import React, { useState, useEffect} from 'react';
+import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Modal} from 'react-native';
+import Drink from '../components/Drinks.js';
 import { StatusBar } from 'expo-status-bar';
 import * as SQLite from 'expo-sqlite';
-import Icon from 'react-native-vector-icons/FontAwesome5'; 
-import {styles} from './styles.js';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import styles from '../styles.js';
 
-export default function App() {
-  const [drinkName, setDrinkName] = useState(''); 
+export default function HomeScreen({ navigation }) {
+
+
+  const [drinkName, setDrinkName] = useState('');
   const [drinkVolume, setDrinkVolume] = useState('');
   const [taskItems, setTaskItems] = useState([]);
   const [isAddMode, setIsAddMode] = useState(false);
@@ -130,11 +132,12 @@ export default function App() {
     }
   };
 
-      return(
-        <View style={styles.container}>
+
+  return (
+      <View style={styles.container}>
 
               <View style={styles.DrinkWrapper}>
-                <Text style={styles.sectionTitle}> Daily Gulp</Text>
+                <Text style={styles.sectionTitle}>Daily Gulp</Text>
                 <View style={styles.items}>
                   {messages.map((item, index) => (
                     <Drink 
@@ -202,13 +205,13 @@ export default function App() {
                 </TouchableOpacity>
                 <View style={styles.MenuItemes}>
                   
-                  <TouchableOpacity onPress={() => console.log('clicked')} style={[styles.MenuItemes, { marginBottom: 1 }]}>
+                  <TouchableOpacity onPress={() => navigation.navigate("Home")} style={[styles.MenuItemes, { marginBottom: 1 }]}>
                     <Text style={styles.MenuItemestext}>Home</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => console.log('clicked')} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
+                  <TouchableOpacity onPress={() => console.log('Clicked')} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
                     <Text style={styles.MenuItemestext}>Settings</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => console.log('clicked')} style={[styles.MenuItemes, { flex: 18, marginTop:2}]}>
+                  <TouchableOpacity onPress={() => navigation.navigate("About")} style={[styles.MenuItemes, { flex: 18, marginTop:2}]}>
                     <Text style={styles.MenuItemestext}>About</Text>
                   </TouchableOpacity>
 
@@ -219,8 +222,5 @@ export default function App() {
           </Modal>
           
         </View>
-        
-      );
+  );
 }
-
-;
