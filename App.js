@@ -4,7 +4,8 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpaci
 import Drink from './components/Drinks.js';
 import { StatusBar } from 'expo-status-bar';
 import * as SQLite from 'expo-sqlite';
-import Icon from 'react-native-vector-icons/FontAwesome5';
+import Icon from 'react-native-vector-icons/FontAwesome5'; 
+import {styles} from './app/styles.js';
 
 export default function App() {
   const [drinkName, setDrinkName] = useState('');
