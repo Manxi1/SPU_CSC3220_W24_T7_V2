@@ -1,9 +1,9 @@
 1. One SELECT statement that joins two tables and limits the result set using the WHERE clause.
 
-SELECT d.Content, d.Volume, t.Date, t.Time
-&emsp;FROM drink d<br>
-&emsp;JOIN tracker t ON d.DrinkListId = t.DrinkListId<br>
-&emsp;WHERE d.Content = "Red Bull";
+&emsp;SELECT d.Content, d.Volume, t.Date, t.Time<br>
+&emsp;&emsp;FROM drink d<br>
+&emsp;&emsp;JOIN tracker t ON d.DrinkListId = t.DrinkListId<br>
+&emsp;&emsp;WHERE d.Content = "Red Bull";
 
 2. One UPDATE statement that updates at least two columns in at least two rows.
 
