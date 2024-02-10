@@ -1,5 +1,5 @@
 --
--- File generated with SQLiteStudio v3.4.4 on Fri Feb 9 18:40:21 2024
+-- File generated with SQLiteStudio v3.4.4 on Sat Feb 10 10:14:07 2024
 --
 -- Text encoding used: System
 --
@@ -34,7 +34,8 @@ CREATE TABLE Tracker (
     DrinkListId INTEGER PRIMARY KEY AUTOINCREMENT,
     Message     TEXT,
     Date        TEXT    NOT NULL,
-    Time        TEXT    NOT NULL
+    Time        TEXT    NOT NULL,
+    GoalId      INTEGER REFERENCES Goal (GoalId) 
 );
 
 
