@@ -16,6 +16,7 @@ export default function HomeScreen({ navigation }) {
   const [isAddMode, setIsAddMode] = useState(false);
   const [messages, setMessages] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [totalVolume, setTotalVolume] = useState(0);
   const db = SQLite.openDatabase('siplogdb.db'); //Database constant
 
   useEffect(() => {
@@ -117,6 +118,7 @@ export default function HomeScreen({ navigation }) {
     itemsCopy.splice(index, 1);
     //setTaskItems(itemsCopy);
     setMessages(itemsCopy);
+    setTotalVolume(totalVolume - parseInt(messages[index].volume));
     const messageId = messages[index]?.id;
     if (messageId) {
       db.transaction((tx) => {
@@ -140,6 +142,7 @@ export default function HomeScreen({ navigation }) {
 
               <View style={styles.DrinkWrapper}>
                 <Text style={styles.sectionTitle}>Daily Gulp</Text>
+                <Text style={styles.totalTitle}>Total Volume: {totalVolume} ml</Text>
                 <View style={styles.items}>
                   {messages.map((item, index) => (
                     <Drink 

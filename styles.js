@@ -29,8 +29,7 @@ const styles = StyleSheet.create({
     },
     buttonText: { // + button text
       color: 'white',
-      fontSize: 30,
-      
+      fontSize: 30, 
     },
     menuButton: { // Menu button
       position: 'absolute',
@@ -44,6 +43,11 @@ const styles = StyleSheet.create({
     sectionTitle: { // Title of the app
       fontSize: 24,
       fontWeight: 'bold',
+    },
+    totalTitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginTop: 10,
     },
     DrinkWrapper: { // Wraps the drinks
       paddingTop: 5, // Add padding to the top of the app
