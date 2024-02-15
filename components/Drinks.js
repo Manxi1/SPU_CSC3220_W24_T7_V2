@@ -18,6 +18,7 @@ const Drink = (props) => {
         </TouchableOpacity>
         <Text style={styles.itemText}>{props.drink}</Text>
         {!!props.volume && <Text style={styles.itemText}> {props.volume}ml</Text>}
+        {!!props.notes && <Text style={styles.itemText}> {props.notes}</Text>}
       </View>
       <View style={styles.menu}>
         <TouchableOpacity onPress={() => console.log('Menu clicked')}>

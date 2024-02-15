@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView, Modal,Button } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView, Modal,Button, Settings } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import Drink from './components/Drinks.js';
@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeScreen from './screens/Home';
 import AboutScreen from './screens/About';
+import SettingsScreen from './screens/Settings';
 import styles from './styles.js';
 
 const Stack = createNativeStackNavigator(); 
@@ -46,6 +47,10 @@ export default function App() {
                     name="About"
                     component={AboutScreen}
                 />
+                <Stack.Screen
+                    name="Settings"
+                    component={SettingsScreen}
+                    />
             </Stack.Navigator>
 
             {/* <Modal

@@ -5,12 +5,13 @@ import { StatusBar } from 'expo-status-bar';
 import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from '../styles.js';
+// import { set } from 'react-native-reanimated';
 
 export default function HomeScreen({ navigation }) {
 
-
   const [drinkName, setDrinkName] = useState('');
   const [drinkVolume, setDrinkVolume] = useState('');
+  const [drinknotes, setDrinkNotes] = useState('');
   const [taskItems, setTaskItems] = useState([]);
   const [isAddMode, setIsAddMode] = useState(false);
   const [DrinkTracker, setDrinkTracker] = useState([]);
@@ -21,20 +22,83 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     // Create table if not exists
     db.transaction(tx => {
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS DrinkTracker (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT, volume INTEGER DEFAULT 0)',
-        [],
-        () => {
-          // Success callback (optional)
-          console.log('Table created successfully');
-          // Fetch data from the database when component mounts
-          fetchDrinkTracker();
-        },
-        (_, error) => {
-          // Error callback
-          console.error('Error creating table:', error);
-        }
-      );
+        tx.executeSql(
+            `CREATE TABLE IF NOT EXISTS Drink (
+                DrinkId     INTEGER PRIMARY KEY AUTOINCREMENT,
+                Content     TEXT    NOT NULL,
+                Volume      NUMERIC DEFAULT (0),
+                Notes       TEXT,
+                Calories    NUMERIC DEFAULT (0),
+                Sugar       NUMERIC DEFAULT (0),
+                Caffeine    NUMERIC DEFAULT (0),
+                DrinkListId INTEGER REFERENCES Tracker (DrinkListId)
+            )`, [],
+            () => {
+              // Success callback (optional)
+              console.log('Drink Table created successfully');
+              // Fetch data from the database when component mounts
+              fetchDrinkTracker();
+            },
+            (_, error) => {
+              // Error callback
+              console.error('Error creating Drink Table:', error);
+            }
+        );
+
+        tx.executeSql(
+            `CREATE TABLE IF NOT EXISTS Goal (
+                GoalId      INTEGER PRIMARY KEY AUTOINCREMENT,
+                WaterIntake INTEGER DEFAULT (0),
+                Volume      NUMERIC DEFAULT (0),
+                Calories    NUMERIC DEFAULT (0),
+                Sugar       NUMERIC DEFAULT (0),
+                Caffeine    NUMERIC DEFAULT (0),
+                DrinkListId INTEGER REFERENCES Tracker (DrinkListId) 
+            )`, [],
+            () => {
+              // Success callback (optional)
+              console.log('Goal Table created successfully');
+              // Fetch data from the database when component mounts
+              fetchDrinkTracker();
+            },
+            (_, error) => {
+              // Error callback
+              console.error('Error creating Goal Table:', error);
+            }
+        );
+
+        tx.executeSql(
+            `CREATE TABLE IF NOT EXISTS Tracker (
+                DrinkListId INTEGER PRIMARY KEY AUTOINCREMENT,
+                Message     TEXT,
+                Date        TEXT    NOT NULL,
+                Time        TEXT    NOT NULL,
+                GoalId      INTEGER REFERENCES Goal (GoalId)
+            )`, [],
+            () => {
+              // Success callback (optional)
+              console.log('Tracker Table created successfully');
+              // Fetch data from the database when component mounts
+              fetchDrinkTracker();
+            },
+            (_, error) => {
+              // Error callback
+              console.error('Error creating Tracker Table:', error);
+            }
+        );
+
+      //   db.transaction(tx => {
+      //     tx.executeSql(
+      //         `ALTER TABLE Drink ADD COLUMN Notes TEXT`, [],
+      //         () => {
+      //             console.log('NewColumn added to Drink table successfully');
+      //         },
+      //         (_, error) => {
+      //             console.error('Error adding NewColumn to Drink table:', error);
+      //         }
+      //     );
+      // });
+
     });
   }, []);
 
@@ -45,15 +109,15 @@ export default function HomeScreen({ navigation }) {
   const fetchDrinkTracker = () => { //Handels error logging if database doesnt open
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM DrinkTracker',
+        'SELECT * FROM Drink',
         [],
         (_, { rows }) => {
-          const data = rows._array.map(item => ({ id: item.id, content: item.content, volume: item.volume}));
+          const data = rows._array.map(item => ({ DrinkId: item.DrinkId, Content: item.Content, Volume: item.Volume , Notes: item.Notes}));
           //setTaskItems(data);
           setDrinkTracker(data);
         },
         (_, error) => {
-          console.log('Error fetching data from database: ', error);
+          console.log('1. Error fetching data from database: ', error);
         }
       );
     });
@@ -61,14 +125,15 @@ export default function HomeScreen({ navigation }) {
 
   const handleAddTask = () => {
     Keyboard.dismiss();
-    const newDrink = `${drinkName} ${drinkVolume}`; // Remove the '-' and 'ml'
-    setTotalVolume(totalVolume + parseInt(drinkVolume));
+    const newDrink = `${drinkName} ${drinkVolume} ${drinknotes}`; // Remove the '-' and 'ml'
     console.log('New Drink:', newDrink); // Log the newDrink value
     console.log('Drink Name:', drinkName); // Log the drink name
     console.log('Drink Volume:', drinkVolume); // Log the drinkVolume value
+    console.log('Drink Notes:', drinknotes); // Log the drinknotes value
     setTaskItems([...taskItems, newDrink]);
     setDrinkName('');
     setDrinkVolume('');
+    setDrinkNotes('');
     setIsAddMode(false);
     
 
@@ -79,17 +144,16 @@ export default function HomeScreen({ navigation }) {
     };
   
     // Insert the new drink into the database
-    const newMessage = newDrink; // Assuming the format is 'Drink Name Volume (ml)'
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO DrinkTracker (content, volume) VALUES (?, ?)',
-        [drinkName, parseInt(drinkVolume)],
+        'INSERT INTO Drink (Content, Volume , Notes) VALUES (?, ? , ?)',
+        [drinkName, parseInt(drinkVolume), drinknotes],
         (_, { insertId }) => {
           console.log('Added to database with ID: ', insertId);
           fetchDrinkTracker(); // Fetch updated DrinkTracker after adding
         },
         (_, error) => {
-          console.log('Error adding to database: ', error);
+          console.log('2. Error adding to database: ', error);
         }
       );
     });
@@ -117,24 +181,23 @@ export default function HomeScreen({ navigation }) {
     //setTaskItems(itemsCopy);
     setDrinkTracker(itemsCopy);
     setTotalVolume(totalVolume - parseInt(DrinkTracker[index].volume));
-    const messageId = DrinkTracker[index]?.id;
+    const messageId = DrinkTracker[index]?.DrinkId;
     if (messageId) {
       db.transaction((tx) => {
         tx.executeSql(
-          'DELETE FROM DrinkTracker WHERE id = ?',
+          'DELETE FROM Drink WHERE DrinkId = ?',
           [messageId],
           () => {
             console.log('Message deleted from database with ID: ', messageId);
             fetchDrinkTracker(); // Fetch updated DrinkTracker after deletion
           },
           (_, error) => {
-            console.log('Error deleting from database: ', error);
+            console.log('3. Error deleting from database: ', error);
           }
         );
       });
     }
   };
-
 
   return (
       <View style={styles.container}>
@@ -146,8 +209,9 @@ export default function HomeScreen({ navigation }) {
                   {DrinkTracker.map((item, index) => (
                     <Drink 
                       key={index} 
-                      drink={item.content} 
-                      volume={item.volume} 
+                      drink={item.Content} 
+                      volume={item.Volume}
+                      notes={item.Notes} 
                       completeTask={() => completeTask(index)} 
                       index={index} 
                     />
@@ -182,6 +246,12 @@ export default function HomeScreen({ navigation }) {
                 value={drinkVolume}
                 onChangeText={(text) => setDrinkVolume(text)}
                 />
+                <TextInput
+                style={styles.inputMessage}
+                placeholder={'Notes'}
+                value={drinknotes}
+                onChangeText={(text) => setDrinkNotes(text)}
+                />
                 <TouchableOpacity onPress={() => handleAddTask()} style={styles.addWrapper}>
                   <Text style={styles.addText}>Add</Text>
                 </TouchableOpacity>
@@ -189,7 +259,6 @@ export default function HomeScreen({ navigation }) {
               </View>
 
             </View>
-
 
           </Modal>
 
@@ -212,7 +281,7 @@ export default function HomeScreen({ navigation }) {
                   <TouchableOpacity onPress={toggleMenu} style={[styles.MenuItemes, { marginBottom: 1 }]}>
                     <Text style={styles.MenuItemestext}>Home</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => console.log('Clicked')} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
+                  <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
                     <Text style={styles.MenuItemestext}>Settings</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => navigation.navigate("About")} style={[styles.MenuItemes, { flex: 18, marginTop:2}]}>

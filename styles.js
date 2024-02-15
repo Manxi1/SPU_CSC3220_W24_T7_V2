@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'flex-end',
       alignItems: 'center',
+      backgroundColor: 'rgba(0,0,0.5,0.5)',
     },
     addWrapper:{ // Adding drinks section
       width: 70,
@@ -81,13 +82,14 @@ const styles = StyleSheet.create({
     },
     modalView:{
       backgroundColor: 'lightgrey',
-      padding: 30,
+      padding: 20,
       borderTopLeftRadius: 50,
       borderTopRightRadius: 50,
       width: '105%',
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+      flexWrap: 'wrap',
     },
     input:{
       paddingVertical: 15,
@@ -95,8 +97,9 @@ const styles = StyleSheet.create({
       backgroundColor: '#FFF',
       borderRadius: 30,
       borderColor: '#C0C0C0',
-      borderWidth: 2,
-      width: 150,
+      borderWidth: 1,
+      width: 180,
+      left: 4,
       marginBottom: 30,
   
     },
@@ -130,11 +133,22 @@ const styles = StyleSheet.create({
        right: 10,
        top: 10,
       
-     },
+    },
      MenuItemestext:{
       fontFamily: 'Roboto',
       fontSize:26,
   
-     }
+     },
+     inputMessage: {
+      paddingVertical: 15,
+      paddingHorizontal: 10,
+      backgroundColor: '#FFF',
+      borderRadius: 30,
+      borderColor: '#C0C0C0',
+      borderWidth: 2,
+      width: 300,
+      marginBottom: 1,
+    },
+
     })
 export default styles;
