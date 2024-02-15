@@ -102,7 +102,7 @@ export default function HomeScreen({ navigation }) {
 
         // db.transaction(tx => {
         //   tx.executeSql(
-        //     'TRUNCATE TABLE FROM Goal',
+        //     'DELETE FROM Goal',
         //     [],
         //     (_, result) => {
         //       console.log('All rows deleted from Goal');
