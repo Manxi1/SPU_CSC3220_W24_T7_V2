@@ -49,7 +49,7 @@ export default function HomeScreen({ navigation }) {
             `CREATE TABLE IF NOT EXISTS Goal (
                 GoalId      INTEGER PRIMARY KEY AUTOINCREMENT,
                 WaterIntake INTEGER DEFAULT (0),
-                Volume      NUMERIC DEFAULT (0),
+                TotalVolume NUMERIC DEFAULT (0),
                 Calories    NUMERIC DEFAULT (0),
                 Sugar       NUMERIC DEFAULT (0),
                 Caffeine    NUMERIC DEFAULT (0),
@@ -59,7 +59,7 @@ export default function HomeScreen({ navigation }) {
               // Success callback (optional)
               console.log('Goal Table created successfully');
               // Fetch data from the database when component mounts
-              fetchDrinkTracker();
+              fetchGoal();
             },
             (_, error) => {
               // Error callback
@@ -87,9 +87,35 @@ export default function HomeScreen({ navigation }) {
             }
         );
 
+        // db.transaction(tx => {
+        //   tx.executeSql(
+        //     'INSERT INTO Goal (TotalVolume) VALUES (?)',
+        //     [0], // Replace with the value you want to insert
+        //     (_, result) => {
+        //       console.log('Row inserted into Goal');
+        //     },
+        //     (_, error) => {
+        //       console.log('Error inserting row into Goal: ', error);
+        //     }
+        //   );
+        // });
+
+        // db.transaction(tx => {
+        //   tx.executeSql(
+        //     'TRUNCATE TABLE FROM Goal',
+        //     [],
+        //     (_, result) => {
+        //       console.log('All rows deleted from Goal');
+        //     },
+        //     (_, error) => {
+        //       console.log('Error deleting rows from Goal: ', error);
+        //     }
+        //   );
+        // });
+
       //   db.transaction(tx => {
       //     tx.executeSql(
-      //         `ALTER TABLE Drink ADD COLUMN Notes TEXT`, [],
+      //         `ALTER TABLE Goal ADD COLUMN TotalVolume NUMERIC DEFAULT (0)`, [],
       //         () => {
       //             console.log('NewColumn added to Drink table successfully');
       //         },
@@ -108,7 +134,7 @@ export default function HomeScreen({ navigation }) {
 
   const fetchDrinkTracker = () => { //Handels error logging if database doesnt open
     db.transaction(tx => {
-      tx.executeSql(
+      tx.executeSql( // Fetch all data from the Drink table
         'SELECT * FROM Drink',
         [],
         (_, { rows }) => {
@@ -123,9 +149,35 @@ export default function HomeScreen({ navigation }) {
     });
   };
 
+  const fetchGoal = () => {
+    db.transaction(tx => {
+      tx.executeSql(
+        'SELECT TotalVolume FROM Goal',
+        [],
+        (_, { rows }) => {
+          console.log(rows._array); // Log the entire result set
+          // Assuming rows._array is an array containing the result of the SQL query
+          if (rows._array.length > 0) {
+            const updatedTotalVolume = parseInt(rows._array[0].totalVolume);
+            setTotalVolume(updatedTotalVolume); // Call setTotalVolume with the retrieved value
+            console.log('Total Volume:', updatedTotalVolume); // Log the retrieved value
+          } else {
+            // Handle case when no rows are returned
+            console.log('No rows returned from database');
+          }
+        },
+        (_, error) => {
+          console.log('1. Error fetching data from database: ', error);
+        }
+      );
+    });
+  };
+
+
   const handleAddTask = () => {
     Keyboard.dismiss();
     const newDrink = `${drinkName} ${drinkVolume} ${drinknotes}`; // Remove the '-' and 'ml'
+    const updatedTotalVolume = totalVolume + parseInt(drinkVolume);
     console.log('New Drink:', newDrink); // Log the newDrink value
     console.log('Drink Name:', drinkName); // Log the drink name
     console.log('Drink Volume:', drinkVolume); // Log the drinkVolume value
@@ -156,31 +208,28 @@ export default function HomeScreen({ navigation }) {
           console.log('2. Error adding to database: ', error);
         }
       );
+
+      tx.executeSql( // Update Goal table with the totalVolume state
+        'UPDATE Goal Set TotalVolume = ? ',
+        [parseInt(updatedTotalVolume)],
+        (_, { insertId }) => {
+          console.log('Updated Goal table');
+          fetchGoal(); // Fetch updated DrinkTracker after adding
+        },
+        (_, error) => {
+          console.log('3. Error adding to database: ', error);
+        }
+      );
     });
   };
-
-  // const handleDelete = (id) => {
-  //   db.transaction(tx => {
-  //     tx.executeSql(
-  //       'DELETE FROM DrinkTracker WHERE id = ?',
-  //       [id],
-  //       () => {
-  //         console.log('Message deleted from database with ID: ', id);
-  //         fetchDrinkTracker(); // Fetch updated DrinkTracker after deletion
-  //       },
-  //       (_, error) => {
-  //         console.log('Error deleting from database: ', error);
-  //       }
-  //     );
-  //   });
-  // };
 
   const completeTask = (index) => {
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1);
     //setTaskItems(itemsCopy);
     setDrinkTracker(itemsCopy);
-    setTotalVolume(totalVolume - parseInt(DrinkTracker[index].volume));
+    const updatedTotalVolume = totalVolume - parseInt(DrinkTracker[index].Volume);
+    setTotalVolume(updatedTotalVolume);
     const messageId = DrinkTracker[index]?.DrinkId;
     if (messageId) {
       db.transaction((tx) => {
@@ -192,10 +241,25 @@ export default function HomeScreen({ navigation }) {
             fetchDrinkTracker(); // Fetch updated DrinkTracker after deletion
           },
           (_, error) => {
-            console.log('3. Error deleting from database: ', error);
+            console.log('4. Error deleting from database: ', error);
           }
         );
       });
+
+      db.transaction((tx) => {
+        tx.executeSql( // Update Goal table with the totalVolume state
+          'UPDATE Goal Set TotalVolume = ? ',
+          [parseInt(updatedTotalVolume)],
+          (_, { insertId }) => {
+            console.log('Updated Goal table');
+            fetchGoal(); // Fetch updated DrinkTracker after adding
+          },
+          (_, error) => {
+            console.log('3. Error adding to database: ', error);
+          }
+        );
+      });
+
     }
   };
 
