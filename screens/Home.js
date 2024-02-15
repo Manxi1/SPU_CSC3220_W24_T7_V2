@@ -14,22 +14,22 @@ export default function HomeScreen({ navigation }) {
   const [drinknotes, setDrinkNotes] = useState('');
   const [taskItems, setTaskItems] = useState([]);
   const [isAddMode, setIsAddMode] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const [DrinkTracker, setDrinkTracker] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [totalVolume, setTotalVolume] = useState(0);
-  const db = SQLite.openDatabase('siplogdb.db'); //Database constant
+  const db = SQLite.openDatabase('./siplogV2db.db'); //Database constant
 
   useEffect(() => {
     // Create table if not exists
     db.transaction(tx => {
       tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS Messages (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT, volume INTEGER DEFAULT 0)',
+        'CREATE TABLE IF NOT EXISTS DrinkTracker (id INTEGER PRIMARY KEY AUTOINCREMENT, content TEXT, volume INTEGER DEFAULT 0)',
         [],
         () => {
           // Success callback (optional)
           console.log('Table created successfully');
           // Fetch data from the database when component mounts
-          fetchMessages();
+          fetchDrinkTracker();
         },
         (_, error) => {
           // Error callback
@@ -43,15 +43,15 @@ export default function HomeScreen({ navigation }) {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
   };
 
-  const fetchMessages = () => { //Handels error logging if database doesnt open
+  const fetchDrinkTracker = () => { //Handels error logging if database doesnt open
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT * FROM Messages',
+        'SELECT * FROM DrinkTracker',
         [],
         (_, { rows }) => {
           const data = rows._array.map(item => ({ id: item.id, content: item.content, volume: item.volume , notes: item.notes}));
           //setTaskItems(data);
-          setMessages(data);
+          setDrinkTracker(data);
         },
         (_, error) => {
           console.log('Error fetching data from database: ', error);
@@ -88,7 +88,7 @@ export default function HomeScreen({ navigation }) {
         [drinkName, parseInt(drinkVolume),(drinknotes)],
         (_, { insertId }) => {
           console.log('Added to database with ID: ', insertId);
-          fetchMessages(); // Fetch updated messages after adding
+          fetchDrinkTracker(); // Fetch updated DrinkTracker after adding
         },
         (_, error) => {
           console.log('Error adding to database: ', error);
@@ -97,37 +97,37 @@ export default function HomeScreen({ navigation }) {
     });
   };
 
-  const handleDelete = (id) => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'DELETE FROM Messages WHERE id = ?',
-        [id],
-        () => {
-          console.log('Message deleted from database with ID: ', id);
-          fetchMessages(); // Fetch updated messages after deletion
-        },
-        (_, error) => {
-          console.log('Error deleting from database: ', error);
-        }
-      );
-    });
-  };
+  // const handleDelete = (id) => {
+  //   db.transaction(tx => {
+  //     tx.executeSql(
+  //       'DELETE FROM DrinkTracker WHERE id = ?',
+  //       [id],
+  //       () => {
+  //         console.log('Message deleted from database with ID: ', id);
+  //         fetchDrinkTracker(); // Fetch updated DrinkTracker after deletion
+  //       },
+  //       (_, error) => {
+  //         console.log('Error deleting from database: ', error);
+  //       }
+  //     );
+  //   });
+  // };
 
   const completeTask = (index) => {
     let itemsCopy = [...taskItems];
     itemsCopy.splice(index, 1);
     //setTaskItems(itemsCopy);
-    setMessages(itemsCopy);
-    setTotalVolume(totalVolume - parseInt(messages[index].volume));
-    const messageId = messages[index]?.id;
+    setDrinkTracker(itemsCopy);
+    setTotalVolume(totalVolume - parseInt(DrinkTracker[index].volume));
+    const messageId = DrinkTracker[index]?.id;
     if (messageId) {
       db.transaction((tx) => {
         tx.executeSql(
-          'DELETE FROM Messages WHERE id = ?',
+          'DELETE FROM DrinkTracker WHERE id = ?',
           [messageId],
           () => {
             console.log('Message deleted from database with ID: ', messageId);
-            fetchMessages(); // Fetch updated messages after deletion
+            fetchDrinkTracker(); // Fetch updated DrinkTracker after deletion
           },
           (_, error) => {
             console.log('Error deleting from database: ', error);
@@ -144,7 +144,7 @@ export default function HomeScreen({ navigation }) {
                 <Text style={styles.sectionTitle}>Daily Gulp</Text>
                 <Text style={styles.totalTitle}>Total Volume: {totalVolume} ml</Text>
                 <View style={styles.items}>
-                  {messages.map((item, index) => (
+                  {DrinkTracker.map((item, index) => (
                     <Drink 
                       key={index} 
                       drink={item.content} 
