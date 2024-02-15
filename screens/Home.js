@@ -5,12 +5,13 @@ import { StatusBar } from 'expo-status-bar';
 import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from '../styles.js';
+// import { set } from 'react-native-reanimated';
 
 export default function HomeScreen({ navigation }) {
 
-
   const [drinkName, setDrinkName] = useState('');
   const [drinkVolume, setDrinkVolume] = useState('');
+  const [drinknotes, setDrinkNotes] = useState('');
   const [taskItems, setTaskItems] = useState([]);
   const [isAddMode, setIsAddMode] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -47,7 +48,7 @@ export default function HomeScreen({ navigation }) {
         'SELECT * FROM Messages',
         [],
         (_, { rows }) => {
-          const data = rows._array.map(item => ({ id: item.id, content: item.content, volume: item.volume}));
+          const data = rows._array.map(item => ({ id: item.id, content: item.content, volume: item.volume , notes: item.notes}));
           //setTaskItems(data);
           setMessages(data);
         },
@@ -60,13 +61,15 @@ export default function HomeScreen({ navigation }) {
 
   const handleAddTask = () => {
     Keyboard.dismiss();
-    const newDrink = `${drinkName} ${drinkVolume}`; // Remove the '-' and 'ml'
+    const newDrink = `${drinkName} ${drinkVolume} ${drinknotes}`; // Remove the '-' and 'ml'
     console.log('New Drink:', newDrink); // Log the newDrink value
     console.log('Drink Name:', drinkName); // Log the drink name
     console.log('Drink Volume:', drinkVolume); // Log the drinkVolume value
+    console.log('Drink Notes:', drinknotes); // Log the drinknotes value
     setTaskItems([...taskItems, newDrink]);
     setDrinkName('');
     setDrinkVolume('');
+    setDrinkNotes('');
     setIsAddMode(false);
     
 
@@ -80,8 +83,8 @@ export default function HomeScreen({ navigation }) {
     const newMessage = newDrink; // Assuming the format is 'Drink Name Volume (ml)'
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO Messages (content, volume) VALUES (?, ?)',
-        [drinkName, parseInt(drinkVolume)],
+        'INSERT INTO Messages (content, volume , notes) VALUES (?, ? , ?)',
+        [drinkName, parseInt(drinkVolume),(drinknotes)],
         (_, { insertId }) => {
           console.log('Added to database with ID: ', insertId);
           fetchMessages(); // Fetch updated messages after adding
@@ -132,7 +135,6 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
-
   return (
       <View style={styles.container}>
 
@@ -143,7 +145,8 @@ export default function HomeScreen({ navigation }) {
                     <Drink 
                       key={index} 
                       drink={item.content} 
-                      volume={item.volume} 
+                      volume={item.volume}
+                      notes={item.notes} 
                       completeTask={() => completeTask(index)} 
                       index={index} 
                     />
@@ -178,6 +181,12 @@ export default function HomeScreen({ navigation }) {
                 value={drinkVolume}
                 onChangeText={(text) => setDrinkVolume(text)}
                 />
+                <TextInput
+                style={styles.inputMessage}
+                placeholder={'Notes'}
+                value={drinknotes}
+                onChangeText={(text) => setDrinkNotes(text)}
+                />
                 <TouchableOpacity onPress={() => handleAddTask()} style={styles.addWrapper}>
                   <Text style={styles.addText}>Add</Text>
                 </TouchableOpacity>
@@ -185,7 +194,6 @@ export default function HomeScreen({ navigation }) {
               </View>
 
             </View>
-
 
           </Modal>
 
@@ -208,7 +216,7 @@ export default function HomeScreen({ navigation }) {
                   <TouchableOpacity onPress={toggleMenu} style={[styles.MenuItemes, { marginBottom: 1 }]}>
                     <Text style={styles.MenuItemestext}>Home</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => console.log('Clicked')} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
+                  <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
                     <Text style={styles.MenuItemestext}>Settings</Text>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => navigation.navigate("About")} style={[styles.MenuItemes, { flex: 18, marginTop:2}]}>
