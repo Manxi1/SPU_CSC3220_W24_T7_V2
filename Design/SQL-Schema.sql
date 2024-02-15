@@ -25,7 +25,8 @@ CREATE TABLE Goal (
     Volume      NUMERIC DEFAULT (0),
     Calories    NUMERIC DEFAULT (0),
     Sugar       NUMERIC DEFAULT (0),
-    Caffeine    NUMERIC DEFAULT (0) 
+    Caffeine    NUMERIC DEFAULT (0),
+    DrinkListId INTEGER REFERENCES Tracker (DrinkListId) 
 );
 
 
