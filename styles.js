@@ -76,6 +76,17 @@ const styles = StyleSheet.create({
       marginBottom: 30,
       left: 0,
     },
+    cancelWrapper:{ 
+      width: 70,
+      height: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 5,
+      borderRadius: 20,
+      backgroundColor: 'lightgrey',
+      marginBottom: 30,
+      right: 1,  
+    },// Adding drinks section
     addText:{
       color: 'white',
       fontSize: 16,

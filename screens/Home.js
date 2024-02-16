@@ -132,6 +132,9 @@ export default function HomeScreen({ navigation }) {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
   };
 
+
+
+
   const fetchDrinkTracker = () => { //Handels error logging if database doesnt open
     db.transaction(tx => {
       tx.executeSql( // Fetch all data from the Drink table
@@ -319,6 +322,10 @@ export default function HomeScreen({ navigation }) {
                 <TouchableOpacity onPress={() => handleAddTask()} style={styles.addWrapper}>
                   <Text style={styles.addText}>Add</Text>
                 </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => setIsAddMode(false)} style={styles.cancelWrapper}>
+                  <Text style={styles.addText}>cancel</Text>
+                  </TouchableOpacity>
                 
               </View>
 
