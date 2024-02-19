@@ -161,6 +161,7 @@ export default function HomeScreen({ navigation }) {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
   };
 
+  
   const toggleTotalPopup = () => {
     setIsTotalPopVisible(!isTotalPopVisible);
   };
