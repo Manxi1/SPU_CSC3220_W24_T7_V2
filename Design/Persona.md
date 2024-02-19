@@ -21,5 +21,5 @@ Motivations</b>
 - Nutritional Awareness: Using the app helps him become more aware of the nutritional content of various beverages.
 - Caffeine Content: Greg has noticed he has been drinking a lot of caffeine and he wants to keep track of how much he is consuming.
 
--![6066316e52f11d0019431b18](https://github.com/Manxi1/SPU_CSC3220_W24_T7_V2/assets/121836436/7f8c3614-a386-4319-b581-8cb309185f9a)
+![6066316e52f11d0019431b18](https://github.com/Manxi1/SPU_CSC3220_W24_T7_V2/assets/121836436/7f8c3614-a386-4319-b581-8cb309185f9a)
 
