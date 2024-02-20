@@ -7,6 +7,7 @@ import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from '../styles.js';
 // import { set } from 'react-native-reanimated';
+//Added comment
 
 export default function HomeScreen({ navigation }) {
 
