@@ -1,4 +1,5 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
+import { Alert } from 'react-native';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Modal} from 'react-native';
 import Drink from '../components/Drinks.js';
 import { StatusBar } from 'expo-status-bar';
@@ -6,6 +7,7 @@ import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from '../styles.js';
 // import { set } from 'react-native-reanimated';
+//Added comment
 
 export default function HomeScreen({ navigation }) {
 
@@ -16,8 +18,12 @@ export default function HomeScreen({ navigation }) {
   const [isAddMode, setIsAddMode] = useState(false);
   const [DrinkTracker, setDrinkTracker] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
   const [totalVolume, setTotalVolume] = useState(0);
-  const db = SQLite.openDatabase('./siplogV2db.db'); //Database constant
+  const [totalCalories, setTotalCalories] = useState(0);
+  const [totalSugar, setTotalSugar] = useState(0);
+  const [TotalCaffeine, setTotalCaffeine] = useState(0);
+  const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
 
   useEffect(() => {
     // Create table if not exists
@@ -50,9 +56,9 @@ export default function HomeScreen({ navigation }) {
                 GoalId      INTEGER PRIMARY KEY AUTOINCREMENT,
                 WaterIntake INTEGER DEFAULT (0),
                 TotalVolume NUMERIC DEFAULT (0),
-                Calories    NUMERIC DEFAULT (0),
-                Sugar       NUMERIC DEFAULT (0),
-                Caffeine    NUMERIC DEFAULT (0),
+                TotalCalories    NUMERIC DEFAULT (0),
+                TotalSugar       NUMERIC DEFAULT (0),
+                TotalCaffeine    NUMERIC DEFAULT (0),
                 DrinkListId INTEGER REFERENCES Tracker (DrinkListId) 
             )`, [],
             () => {
@@ -89,8 +95,8 @@ export default function HomeScreen({ navigation }) {
 
         // db.transaction(tx => {
         //   tx.executeSql(
-        //     'INSERT INTO Goal (TotalVolume) VALUES (?)',
-        //     [0], // Replace with the value you want to insert
+        //     'INSERT INTO Goal (TotalVolume, TotalCalories, TotalSugar, TotalCaffeine) VALUES (?, ?, ?, ?)',
+        //     [0, 0, 0, 0], // Replace with the value you want to insert
         //     (_, result) => {
         //       console.log('Row inserted into Goal');
         //     },
@@ -128,12 +134,38 @@ export default function HomeScreen({ navigation }) {
     });
   }, []);
 
+  const resetGoalsTable = () => { // For future use to reset goals table
+
+    db.transaction(tx => {
+      tx.executeSql(
+        `UPDATE Goal SET TotalVolume = ? WHERE GoalId = ?`, 
+        [0, 1],
+        (_, results) => {
+          console.log('Results', results.rowsAffected);
+          if (results.rowsAffected > 0) {
+            console.log('Update successful');
+            setTotalVolume(0); // increment refreshKey to force a re-render
+          } else {
+            console.log('Update failed');
+          }
+        },
+        (_, error) => {
+          console.error('Error updating totalVolume in Goals table:', error);
+        }
+      );
+    });
+
+  };
+
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
   };
 
-
-
+  
+  const toggleTotalPopup = () => {
+    setIsTotalPopVisible(!isTotalPopVisible);
+  };
 
   const fetchDrinkTracker = () => { //Handels error logging if database doesnt open
     db.transaction(tx => {
@@ -155,15 +187,24 @@ export default function HomeScreen({ navigation }) {
   const fetchGoal = () => {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT TotalVolume FROM Goal',
+        'SELECT TotalVolume, TotalCalories, TotalSugar, TotalCaffeine FROM Goal',
         [],
         (_, { rows }) => {
           console.log(rows._array); // Log the entire result set
           // Assuming rows._array is an array containing the result of the SQL query
           if (rows._array.length > 0) {
-            const updatedTotalVolume = parseInt(rows._array[0].totalVolume);
+            const updatedTotalVolume = parseInt(rows._array[0].TotalVolume);
+            const updatedTotalCalories = parseInt(rows._array[0].TotalCalories);
+            const updatedTotalSugar = parseInt(rows._array[0].TotalSugar);
+            const updatedTotalCaffeine = parseInt(rows._array[0].TotalCaffeine);
             setTotalVolume(updatedTotalVolume); // Call setTotalVolume with the retrieved value
+            setTotalCalories(updatedTotalCalories);
+            setTotalSugar(updatedTotalSugar);
+            setTotalCaffeine(updatedTotalCaffeine);
             console.log('Total Volume:', updatedTotalVolume); // Log the retrieved value
+            console.log('Total Calories:', updatedTotalCalories);
+            console.log('Total Sugar:', updatedTotalSugar);
+            console.log('Total Caffeine:', updatedTotalCaffeine);
           } else {
             // Handle case when no rows are returned
             console.log('No rows returned from database');
@@ -180,6 +221,10 @@ export default function HomeScreen({ navigation }) {
   const handleAddTask = () => {
     Keyboard.dismiss();
     const newDrink = `${drinkName} ${drinkVolume} ${drinknotes}`; // Remove the '-' and 'ml'
+    if (isNaN(drinkVolume)) {
+      Alert.alert('Warning', 'Drink volume must be a number');
+      return;
+    }
     const updatedTotalVolume = totalVolume + parseInt(drinkVolume);
     console.log('New Drink:', newDrink); // Log the newDrink value
     console.log('Drink Name:', drinkName); // Log the drink name
@@ -266,12 +311,16 @@ export default function HomeScreen({ navigation }) {
     }
   };
 
+
   return (
       <View style={styles.container}>
 
               <View style={styles.DrinkWrapper}>
                 <Text style={styles.sectionTitle}>Daily Gulp</Text>
-                <Text style={styles.totalTitle}>Total Volume: {totalVolume} ml</Text>
+                <TouchableOpacity onPress={toggleTotalPopup} style={styles.totalVolumeButton}>
+                  <Text style={styles.volumeTitle}>Total Volume: {totalVolume} ml</Text>
+                  <Text style={styles.volumeFooter}>Click for more</Text>
+                </TouchableOpacity>
                 <View style={styles.items}>
                   {DrinkTracker.map((item, index) => (
                     <Drink 
@@ -285,6 +334,31 @@ export default function HomeScreen({ navigation }) {
                   ))}
                 </View>
               </View>
+
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={isTotalPopVisible}
+                onRequestClose={() => {
+                  setIsTotalPopVisible(false);
+                }}>
+                <View style={styles.totalPopup}>
+                  <View style={styles.totalPopupView}>
+                    <View style={styles.totalPopupText}>
+                      <Text>Total Volume: {totalVolume}</Text>
+                      <Text>Total Calories: {totalCalories}</Text>
+                      <Text>Total Sugar: {totalSugar}</Text>
+                      <Text>Total Caffeine: {TotalCaffeine}</Text>
+                      {/* <TouchableOpacity onPress={resetGoalsTable} style={styles.totalPopupClose}>
+                        <Text style={styles.addText}>Reset</Text>
+                      </TouchableOpacity> */}
+                      <TouchableOpacity onPress={() => setIsTotalPopVisible(false)} style={styles.totalPopupClose}>
+                        <Text style={styles.addText}>Close</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                </View>
+              </Modal>
           
 
             
@@ -301,31 +375,46 @@ export default function HomeScreen({ navigation }) {
           >
             <View style={styles.modalContainer}>
               <View style = {styles.modalView}>
-                <TextInput
-                style={styles.input}
-                placeholder={'Drink Name'}
-                value={drinkName}
-                onChangeText={(text)=> setDrinkName(text)}/>
-                <TextInput
-                style={styles.input}
-                placeholder={'Volume (ml)'}
-                keyboardType={'numeric'}
-                value={drinkVolume}
-                onChangeText={(text) => setDrinkVolume(text)}
-                />
-                <TextInput
-                style={styles.inputMessage}
-                placeholder={'Notes'}
-                value={drinknotes}
-                onChangeText={(text) => setDrinkNotes(text)}
-                />
-                <TouchableOpacity onPress={() => handleAddTask()} style={styles.addWrapper}>
-                  <Text style={styles.addText}>Add</Text>
-                </TouchableOpacity>
+                <View style = {styles.textInputView}>
+                  <TextInput
+                  style={styles.input}
+                  placeholder={'Drink Name'}
+                  value={drinkName}
+                  onChangeText={(text)=> setDrinkName(text)}/>
+                  <TextInput
+                  style={styles.input}
+                  placeholder={'Volume (ml)'}
+                  keyboardType={'numeric'}
+                  value={drinkVolume}
+                  onChangeText={(text) => setDrinkVolume(text)}
+                  />
+                  <TextInput
+                  style={styles.inputMessage}
+                  placeholder={'Notes'}
+                  value={drinknotes}
+                  onChangeText={(text) => setDrinkNotes(text)}
+                  />
+                </View>
 
-                <TouchableOpacity onPress={() => setIsAddMode(false)} style={styles.cancelWrapper}>
-                  <Text style={styles.addText}>cancel</Text>
+                <View style = {styles.addCloseView}>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setDrinkName('');
+                      setDrinkVolume('');
+                      setDrinkNotes('');
+                      setIsAddMode(false);
+                    }}
+                    style={styles.addWrapper}
+                  >
+                    <Text style={styles.addText}>Close</Text>
                   </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => handleAddTask()} style={styles.addWrapper}>
+                    <Text style={styles.addText}>Add</Text>
+                  </TouchableOpacity>
+
+                </View>
                 
               </View>
 

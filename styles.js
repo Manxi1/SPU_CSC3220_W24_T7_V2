@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
       color: '#000',
     },
     sectionTitle: { // Title of the app
-      fontSize: 24,
+      fontSize: 30,
       fontWeight: 'bold',
     },
     totalTitle: {
@@ -65,6 +65,10 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: 'rgba(0,0,0.5,0.5)',
     },
+    addCloseView: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
     addWrapper:{ // Adding drinks section
       width: 70,
       height: 50,
@@ -74,6 +78,7 @@ const styles = StyleSheet.create({
       borderRadius: 30,
       backgroundColor: '#ff5722',
       marginBottom: 30,
+      marginTop: 10,
       left: 0,
     },
     cancelWrapper:{ 
@@ -91,16 +96,22 @@ const styles = StyleSheet.create({
       color: 'white',
       fontSize: 16,
     },
+    textInputView: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+    },
     modalView:{
       backgroundColor: 'lightgrey',
       padding: 20,
       borderTopLeftRadius: 50,
       borderTopRightRadius: 50,
       width: '105%',
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      flexWrap: 'wrap',
+      // flexDirection: 'row',
+      // justifyContent: 'space-between',
+      // alignItems: 'center',
+      // flexWrap: 'wrap',
     },
     input:{
       paddingVertical: 15,
@@ -159,6 +170,62 @@ const styles = StyleSheet.create({
       borderWidth: 2,
       width: 300,
       marginBottom: 1,
+    },
+
+    totalVolumeButton: {
+      width: 250,
+      height: 60,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 10,
+      borderRadius: 40,
+      marginTop: 15,
+      backgroundColor: '#ff5722',
+    },
+    volumeTitle: { // Title of the app
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+    volumeFooter: { // Title of the app
+      fontSize: 15,
+      fontStyle: 'italic',
+      color: '#484848',
+    },
+    totalPopup: {
+      flex: 1,
+      alignItems: 'center',
+      backgroundColor: 'rgba(0,0,0.5,0.5)',
+    },
+    totalPopupView: {
+      backgroundColor: 'lightgrey',
+      padding: 20,
+      borderRadius: 50,
+      width: '90%',
+      marginTop: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      marginHorizontal: 100,
+    },
+    totalPopupText: {
+      justifyContent: "center",
+      paddingHorizontal: 15,
+      minHeight: 100,
+    },
+    totalPopupClose: {
+      justifyContent: "center",
+      alignItems: "center",
+      padding: 10,
+      flexDirection: "row",
+      width: 70,
+      height: 70,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 10,
+      borderRadius: 40,
+      marginHorizontal: '38%',
+      backgroundColor: '#ff5722',
     },
 
     })
