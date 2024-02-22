@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Alert } from 'react-native';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Modal} from 'react-native';
 import Drink from '../components/Drinks.js';
 import { StatusBar } from 'expo-status-bar';
 import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import styles from '../styles.js';
-// import { set } from 'react-native-reanimated';
-//Added comment
+import styles from './styles.js';
+import AppContext from '../AppContextAPI'; 
 
 export default function HomeScreen({ navigation }) {
 
@@ -19,10 +18,12 @@ export default function HomeScreen({ navigation }) {
   const [DrinkTracker, setDrinkTracker] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
-  const [totalVolume, setTotalVolume] = useState(0);
-  const [totalCalories, setTotalCalories] = useState(0);
-  const [totalSugar, setTotalSugar] = useState(0);
-  const [TotalCaffeine, setTotalCaffeine] = useState(0);
+  // const [totalVolume, setTotalVolume] = useState(0);
+  // const [totalCalories, setTotalCalories] = useState(0);
+  // const [totalSugar, setTotalSugar] = useState(0);
+  // const [TotalCaffeine, setTotalCaffeine] = useState(0);
+  const { totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
+    totalSugar, setTotalSugar, TotalCaffeine, setTotalCaffeine } = useContext(AppContext);
   const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
 
   useEffect(() => {
@@ -316,7 +317,17 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.container}>
 
               <View style={styles.DrinkWrapper}>
-                <Text style={styles.sectionTitle}>Daily Gulp</Text>
+                <View style={styles.sectionTitle}>
+                  <Text style={styles.sectionTitleTextBig}>Daily Gulp</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate("Goals", {
+                      totalVolume: totalVolume,
+                      totalCalories: totalCalories,
+                      totalSugar: totalSugar,
+                      TotalCaffeine: TotalCaffeine
+                    })}>
+                    <Text style={styles.sectionTitleTextSmallGoal}>Goals</Text>
+                  </TouchableOpacity>
+                </View>
                 <TouchableOpacity onPress={toggleTotalPopup} style={styles.totalVolumeButton}>
                   <Text style={styles.volumeTitle}>Total Volume: {totalVolume} ml</Text>
                   <Text style={styles.volumeFooter}>Click for more</Text>
@@ -407,7 +418,7 @@ export default function HomeScreen({ navigation }) {
                     }}
                     style={styles.addWrapper}
                   >
-                    <Text style={styles.addText}>Close</Text>
+                    <Text style={styles.addText}>Cancel</Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity onPress={() => handleAddTask()} style={styles.addWrapper}>

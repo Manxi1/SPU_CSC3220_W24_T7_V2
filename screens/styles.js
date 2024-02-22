@@ -41,8 +41,29 @@ const styles = StyleSheet.create({
       color: '#000',
     },
     sectionTitle: { // Title of the app
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'baseline',
+    },
+    sectionTitleTextBig: { // Title of the app
       fontSize: 30,
       fontWeight: 'bold',
+      marginHorizontal: 5,
+      textDecorationLine: 'underline',
+    },
+    sectionTitleTextSmallGoal: { // Title of the app
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginHorizontal: 5,
+      left: 10,
+      textDecorationLine: 'underline',
+    },
+    sectionTitleTextSmallDaily: { // Title of the app
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginHorizontal: 5,
+      right: 10,
+      textDecorationLine: 'underline',
     },
     totalTitle: {
       fontSize: 24,
@@ -81,17 +102,6 @@ const styles = StyleSheet.create({
       marginTop: 10,
       left: 0,
     },
-    cancelWrapper:{ 
-      width: 70,
-      height: 30,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 5,
-      borderRadius: 20,
-      backgroundColor: 'lightgrey',
-      marginBottom: 30,
-      right: 1,  
-    },// Adding drinks section
     addText:{
       color: 'white',
       fontSize: 16,
@@ -199,7 +209,7 @@ const styles = StyleSheet.create({
     totalPopupView: {
       backgroundColor: 'lightgrey',
       padding: 20,
-      borderRadius: 50,
+      borderRadius: 10,
       width: '90%',
       marginTop: 10,
       flexDirection: 'row',
