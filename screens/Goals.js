@@ -1,20 +1,25 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { Alert } from 'react-native';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { Alert, Animated } from 'react-native';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Modal} from 'react-native';
-import Drink from '../components/Drinks.js';
-import { StatusBar } from 'expo-status-bar';
-import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles.js';
 import AppContext from '../AppContextAPI'; 
 
 export default function HomeScreen({ navigation }) {
-    const { totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
-        totalSugar, setTotalSugar, TotalCaffeine, setTotalCaffeine } = useContext(AppContext);
+  const { totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
+    totalSugar, setTotalSugar, TotalCaffeine, setTotalCaffeine } = useContext(AppContext);
 
+  const [isAddMode, setIsAddMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
+  const animation = useRef(new Animated.Value(0));
+  const [count, setCount] = useState(0);
+  const [width, setWidth] = useState(0);
 
+  const updateProgressBar = () => {
+    setCount(count + 5);
+    setWidth(count);
+  };
   
   const toggleTotalPopup = () => {
     setIsTotalPopVisible(!isTotalPopVisible);
@@ -58,53 +63,119 @@ export default function HomeScreen({ navigation }) {
     });
   };
 
+  const handleAddTask = () => {
+    Keyboard.dismiss();
+   setIsAddMode(false);
+    
+
+    
+  
+    const handleBackButton = () => {
+      setIsMenuOpen(false); // Close the menu
+    };
+  
+    // Insert the new drink into the database
+    // db.transaction(tx => {
+    //   tx.executeSql(
+    //     'INSERT INTO Drink (Content, Volume , Notes) VALUES (?, ? , ?)',
+    //     [drinkName, parseInt(drinkVolume), drinknotes],
+    //     (_, { insertId }) => {
+    //       console.log('Added to database with ID: ', insertId);
+    //       fetchDrinkTracker(); // Fetch updated DrinkTracker after adding
+    //     },
+    //     (_, error) => {
+    //       console.log('2. Error adding to database: ', error);
+    //     }
+    //   );
+    // });
+  };
+
 
   return (
+    
       <View style={styles.container}>
 
-              <View style={styles.DrinkWrapper}>
-                <View style={styles.sectionTitle}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Text style={styles.sectionTitleTextSmallDaily}>Daily Gulp</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.sectionTitleTextBig}>Goals</Text>
+          <View style={styles.DrinkWrapper}>
+            <View style={styles.sectionTitle}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Text style={styles.sectionTitleTextSmallDaily}>Daily Gulp</Text>
+                </TouchableOpacity>
+                <Text style={styles.sectionTitleTextBig}>Goals</Text>
+            </View>
+          </View>
+
+          <View style={styles.todaysGoalTitle}>
+            <Text>Todays Goals</Text>
+          </View>
+
+            <Text>
+              Loading.....
+            </Text>
+            <View style={styles.progressBar}>
+              <Animated.View style={[StyleSheet.absoluteFill, {backgroundColor: "#8BED4F", width}]}/>
+            </View>
+            <Text>{count}</Text>
+
+            <TouchableOpacity onPress={updateProgressBar} style={styles.totalButton}>
+              <Text style={styles.totalButtonText}>Update Bar</Text>
+            </TouchableOpacity>
+
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.roundButton} onPress={() => setIsAddMode(true)}>
+              <Text style={styles.buttonText}>+</Text>
+            </TouchableOpacity>
+            <Text style={styles.volumeFooter}>Click to add a goal</Text>
+          </View>
+          <Modal 
+          visible={isAddMode} 
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setIsAddMode(false)}
+          >
+            <View style={styles.modalContainer}>
+              <View style = {styles.modalView}>
+                <View style = {styles.textInputView}>
+                  <TextInput
+                  style={styles.input}
+                  placeholder={'Drink Name'}/>
+                  <TextInput
+                  style={styles.input}
+                  placeholder={'Volume (ml)'}
+                  />
+                  <TextInput
+                  style={styles.inputMessage}
+                  placeholder={'Notes'}
+                  />
                 </View>
-                {/* <TouchableOpacity onPress={toggleTotalPopup} style={styles.totalVolumeButton}>
-                  <Text style={styles.volumeTitle}>Total Volume: {totalVolume} ml</Text>
-                  <Text style={styles.volumeFooter}>Click for more</Text>
-                </TouchableOpacity> */}
+
+                <View style = {styles.addCloseView}>
+
+                  <TouchableOpacity
+                    onPress={() => {
+                      setIsAddMode(false);
+                    }}
+                    style={styles.addWrapper}
+                  >
+                    <Text style={styles.addText}>Cancel</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity onPress={() => handleAddTask()} style={styles.addWrapper}>
+                    <Text style={styles.addText}>Add</Text>
+                  </TouchableOpacity>
+
+                </View>
+                
               </View>
 
-              {/* <View style={drinkStyles.container}>
-                <View style={drinkStyles.itemContainer}>
-                  <View style={drinkStyles.item}>
-                    <Text>Hello</Text>
-                  </View>
-                </View>
-              </View> */}
+            </View>
 
-              {/* <Modal
-                animationType="fade"
-                transparent={true}
-                visible={isTotalPopVisible}
-                onRequestClose={() => {
-                  setIsTotalPopVisible(false);
-                }}>
-                <View style={styles.totalPopup}>
-                  <View style={styles.totalPopupView}>
-                    <View style={styles.totalPopupText}>
-                      <Text>Total Volume: {totalVolume}</Text>
-                      <Text>Total Calories: {totalCalories}</Text>
-                      <Text>Total Sugar: {totalSugar}</Text>
-                      <Text>Total Caffeine: {TotalCaffeine}</Text>
-                      <TouchableOpacity onPress={() => setIsTotalPopVisible(false)} style={styles.totalPopupClose}>
-                        <Text style={styles.addText}>Close</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                </View>
-              </Modal> */}
-          
+          </Modal>
+
+
+
+
+
 
           <TouchableOpacity onPress={toggleMenu} style={styles.menuButton}>
             <Text style={styles.menuText}>☰</Text>
@@ -138,6 +209,7 @@ export default function HomeScreen({ navigation }) {
             
           </Modal>
           
-        </View>
+      </View>
+      
   );
 }
