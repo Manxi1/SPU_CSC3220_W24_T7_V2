@@ -9,16 +9,22 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeScreen from './screens/Home';
 import AboutScreen from './screens/About';
 import SettingsScreen from './screens/Settings';
-import styles from './styles.js';
+import GoalsScreen from './screens/Goals';
+import styles from './screens/styles.js';
+import AppContext from './AppContextAPI';
 
 const Stack = createNativeStackNavigator(); 
 
 export default function App() {
-  const [drinkName, setDrinkName] = useState(''); 
-  const [drinkVolume, setDrinkVolume] = useState('');
-  const [taskItems, setTaskItems] = useState([]);
-  const [isAddMode, setIsAddMode] = useState(false);
-  const [messages, setMessages] = useState([]);
+  // const [drinkName, setDrinkName] = useState(''); 
+  // const [drinkVolume, setDrinkVolume] = useState('');
+  // const [taskItems, setTaskItems] = useState([]);
+  // const [isAddMode, setIsAddMode] = useState(false);
+  // const [messages, setMessages] = useState([]);
+  const [totalVolume, setTotalVolume] = useState(0);
+  const [totalCalories, setTotalCalories] = useState(0);
+  const [totalSugar, setTotalSugar] = useState(0);
+  const [TotalCaffeine, setTotalCaffeine] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -27,6 +33,16 @@ export default function App() {
   };
 
     return (
+      <AppContext.Provider value={{
+        totalVolume,
+        setTotalVolume,
+        totalCalories,
+        setTotalCalories,
+        totalSugar,
+        setTotalSugar,
+        TotalCaffeine,
+        setTotalCaffeine
+      }}>
         <NavigationContainer>
             <Stack.Navigator
               initialRouteName="Home"
@@ -44,6 +60,10 @@ export default function App() {
                     }}
                 />
                 <Stack.Screen
+                    name="Goals"
+                    component={GoalsScreen}
+                />
+                <Stack.Screen
                     name="About"
                     component={AboutScreen}
                 />
@@ -53,36 +73,7 @@ export default function App() {
                     />
             </Stack.Navigator>
 
-            {/* <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={isMenuOpen}
-                    onRequestClose={toggleMenu}>
-                    <View style={styles.menuContainer}>
-                    <View style={styles.menuContent}>
-                        <TouchableOpacity onPress={toggleMenu} style={styles.backButton}>
-                        <Icon name="arrow-left" size={30} color="#000" />
-                        </TouchableOpacity>
-                        <View style={styles.MenuItemes}>
-                        
-                        <TouchableOpacity onPress={() => navigation.navigate('AboutScreen')} style={[styles.MenuItemes, { marginBottom: 1 }]}>
-                            <Text style={styles.MenuItemestext}>Home</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => console.log('Clicked')} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
-                            <Text style={styles.MenuItemestext}>Settings</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => navigation.navigate('About')} style={[styles.MenuItemes, { flex: 18, marginTop:2}]}>
-                            <Text style={styles.MenuItemestext}>About</Text>
-                        </TouchableOpacity>
-
-                        </View>
-                        </View>
-                    </View>
-                    
-                </Modal> */}
-
         </NavigationContainer>
+      </AppContext.Provider>
     );
 }
-
-;
