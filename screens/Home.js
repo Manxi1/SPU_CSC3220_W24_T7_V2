@@ -222,8 +222,12 @@ export default function HomeScreen({ navigation }) {
   const handleAddTask = () => {
     Keyboard.dismiss();
     const newDrink = `${drinkName} ${drinkVolume} ${drinknotes}`; // Remove the '-' and 'ml'
-    if (isNaN(drinkVolume)) {
+    if (isNaN(drinkVolume) || drinkVolume === '') {
       Alert.alert('Warning', 'Drink volume must be a number');
+      return;
+    }
+    if (parseInt(drinkVolume) < 0) {
+      Alert.alert('Warning', 'Drink volume must be a positive number');
       return;
     }
     const updatedTotalVolume = totalVolume + parseInt(drinkVolume);

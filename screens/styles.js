@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native";
+import Constants from 'expo-constants';
+
 const styles = StyleSheet.create({
     container: { // Wraps whole app
       flex: 1,
@@ -237,6 +239,22 @@ const styles = StyleSheet.create({
       marginHorizontal: '38%',
       backgroundColor: '#ff5722',
     },
-
+    todaysGoalTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      top: -250,
+      left: -120,
+    },
+     progressBar: {
+      marginTop: -100,
+      marginBottom: -100,
+      height: 20,
+      flexDirection: "row",
+      width: '100%',
+      backgroundColor: 'white',
+      borderColor: '#000',
+      borderWidth: 2,
+      borderRadius: 5
+    }
     })
 export default styles;
