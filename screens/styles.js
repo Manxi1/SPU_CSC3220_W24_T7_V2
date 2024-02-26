@@ -128,12 +128,13 @@ const styles = StyleSheet.create({
     input:{
       paddingVertical: 15,
       paddingHorizontal: 10,
-      backgroundColor: '#FFF',
+      backgroundColor: 'lightgrey',
       borderRadius: 30,
       borderColor: '#C0C0C0',
       borderWidth: 1,
       width: 180,
       left: 4,
+      backgroundColor: 'white',
       marginBottom: 30,
   
     },
@@ -256,5 +257,7 @@ const styles = StyleSheet.create({
       borderWidth: 2,
       borderRadius: 5
     }
+    //
+    
     })
 export default styles;
