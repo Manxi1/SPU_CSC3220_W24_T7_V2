@@ -18,3 +18,8 @@ This app help will user track their drink in take throughout the day. It will tr
 The app will be designed using Js React native and it will run in the Androids.
 
 Design elements and more can be found in the Design folder.
+
+New things to install:
+
+- npm install react-native-circular-progress
+- npm install react-native-swipe-gestures
