@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from '../styles.js';
+import DropDownPicker from 'react-native-dropdown-picker';
 // import { set } from 'react-native-reanimated';
 //Added comment
 
@@ -270,6 +271,25 @@ export default function HomeScreen({ navigation }) {
       );
     });
   };
+  const [searchQuery, setSearchQuery] = useState('');
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+    const [items, setItems] = useState([
+      { label: 'Item 1', value: 'item1' },
+      { label: 'Item 2', value: 'item2' },
+      { label: 'Item 3', value: 'item3' },
+    ]);
+  
+    const handleSearch = (text) => {
+      setSearchQuery(text);
+      // You can implement search logic here
+    };
+  
+    const handleSelectItem = (item) => {
+      setSelectedItem(item);
+      setDropdownOpen(false);
+      // Handle selected item logic here
+    };
 
   const completeTask = (index) => {
     let itemsCopy = [...taskItems];
@@ -363,6 +383,25 @@ export default function HomeScreen({ navigation }) {
 
             
           <View style={styles.buttonContainer}>
+          <TextInput
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+        onChangeText={handleSearch}
+        value={searchQuery}
+        placeholder="Search..."
+      />
+      <DropDownPicker
+        open={dropdownOpen}
+        value={selectedItem}
+        items={items}
+        setOpen={setDropdownOpen}
+        setValue={setSelectedItem}
+        setItems={setItems}
+        placeholder="Select an item"
+        zIndex={9999} // Set a high zIndex to display above other components
+        style={{ zIndex: 9999 }} // Adjust style as needed
+        onChangeValue={(value) => handleSelectItem(value)}
+      />
+            
             <TouchableOpacity style={styles.roundButton} onPress={() => setIsAddMode(true)}>
               <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
