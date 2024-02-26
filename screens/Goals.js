@@ -1,9 +1,13 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Alert, Animated } from 'react-native';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Modal} from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Modal, PanResponder} from 'react-native';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { TabView, SceneMap } from 'react-native-tab-view';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles.js';
 import AppContext from '../AppContextAPI'; 
+import SwipeGesture from 'react-native-swipe-gestures';
+
 
 export default function HomeScreen({ navigation }) {
   const { totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
@@ -14,11 +18,28 @@ export default function HomeScreen({ navigation }) {
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
   const animation = useRef(new Animated.Value(0));
   const [count, setCount] = useState(0);
-  const [width, setWidth] = useState(0);
+
+  const [swipeDirection, setSwipeDirection] = useState('');
+
+  const onSwipeUp = () => {
+    setSwipeDirection('up');
+  };
+
+  const onSwipeDown = () => {
+    setSwipeDirection('down');
+  };
+
+  const config = {
+    velocityThreshold: 0.3,
+    directionalOffsetThreshold: 80,
+  };
 
   const updateProgressBar = () => {
     setCount(count + 5);
-    setWidth(count);
+  };
+
+  const resetCount = () => {
+    setCount(0);
   };
   
   const toggleTotalPopup = () => {
@@ -108,16 +129,39 @@ export default function HomeScreen({ navigation }) {
             <Text>Todays Goals</Text>
           </View>
 
-            <Text>
-              Loading.....
-            </Text>
-            <View style={styles.progressBar}>
-              <Animated.View style={[StyleSheet.absoluteFill, {backgroundColor: "#8BED4F", width}]}/>
+          {/* <SwipeGesture
+            onSwipeUp={onSwipeUp}
+            onSwipeDown={onSwipeDown}
+            config={config}
+            style={{ flex: 1 }}
+          >
+            <View>
+              <Text>{swipeDirection}</Text>
             </View>
-            <Text>{count}</Text>
+          </SwipeGesture> */}
+
+
+          <AnimatedCircularProgress
+            size={100} // size of the progress bar
+            width={10} // width of the progress ring
+            fill={count} // percentage of the progress
+            tintColor="black" // color of the progress bar
+            backgroundColor="#D3D3D3" // color of the remaining progress
+            rotation={0} // start position of the progress bar
+            children={() => 
+              <View>
+                <Text>{count}%</Text>
+                <Text>{count}% left</Text>
+              </View>
+            }
+          />
 
             <TouchableOpacity onPress={updateProgressBar} style={styles.totalButton}>
               <Text style={styles.totalButtonText}>Update Bar</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={resetCount} style={styles.totalButton}>
+              <Text style={styles.totalButtonText}>Reset Bar</Text>
             </TouchableOpacity>
 
 
