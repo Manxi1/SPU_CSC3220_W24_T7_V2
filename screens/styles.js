@@ -245,16 +245,8 @@ const styles = StyleSheet.create({
       top: -250,
       left: -120,
     },
-     progressBar: {
-      marginTop: -100,
-      marginBottom: -100,
-      height: 20,
-      flexDirection: "row",
-      width: '100%',
-      backgroundColor: 'white',
-      borderColor: '#000',
-      borderWidth: 2,
-      borderRadius: 5
-    }
+    scene:{
+      flex: 1
+    },
     })
 export default styles;
