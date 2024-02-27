@@ -240,14 +240,44 @@ const styles = StyleSheet.create({
       marginHorizontal: '38%',
       backgroundColor: '#ff5722',
     },
-    todaysGoalTitle: {
+    todaysGoalContainer: {
       fontSize: 20,
       fontWeight: 'bold',
-      top: -250,
-      left: -120,
+      flexDirection: 'row',
     },
-    scene:{
-      flex: 1
+    swipeBox:{
+      flex: 1, 
+      borderColor: '#3d3d5c',
+      borderWidth: 2,
+      height: 300, 
+      marginHorizontal: 30,
+      padding: 20,
     },
+    goalsTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      marginHorizontal: 5,
+    },
+    alignEclipse: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      marginTop: 80,
+    },
+    greyElipses: {
+      width: 10,
+        height: 10,
+        borderRadius: 50,
+        backgroundColor: 'grey',
+        marginHorizontal: 5,
+    },
+    blackElipses: {
+      width: 10,
+        height: 10,
+        borderRadius: 50,
+        backgroundColor: 'black',
+        marginHorizontal: 5,
+    }
     })
 export default styles;

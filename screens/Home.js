@@ -24,7 +24,9 @@ export default function HomeScreen({ navigation }) {
   // const [totalSugar, setTotalSugar] = useState(0);
   // const [TotalCaffeine, setTotalCaffeine] = useState(0);
   const { totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
-    totalSugar, setTotalSugar, TotalCaffeine, setTotalCaffeine } = useContext(AppContext);
+    totalSugar, setTotalSugar, totalWaterIntake, setTotalWaterIntake,
+    TotalCaffeine, setTotalCaffeine, waterIntakeGoal, setWaterIntakeGoal, calorieGoal, 
+    setCalorieGoal, sugarGoal, setSugarGoal, caffeineGoal, setCaffeineGoal } = useContext(AppContext);
   const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
 
   useEffect(() => {
@@ -58,9 +60,13 @@ export default function HomeScreen({ navigation }) {
                 GoalId      INTEGER PRIMARY KEY AUTOINCREMENT,
                 WaterIntake INTEGER DEFAULT (0),
                 TotalVolume NUMERIC DEFAULT (0),
+                TotalWaterIntake NUMERIC DEFAULT (0),
                 TotalCalories    NUMERIC DEFAULT (0),
                 TotalSugar       NUMERIC DEFAULT (0),
                 TotalCaffeine    NUMERIC DEFAULT (0),
+                CalorieGoal      NUMERIC DEFAULT (0),
+                SugarGoal        NUMERIC DEFAULT (0),
+                CaffeineGoal     NUMERIC DEFAULT (0),
                 DrinkListId INTEGER REFERENCES Tracker (DrinkListId) 
             )`, [],
             () => {
@@ -121,19 +127,19 @@ export default function HomeScreen({ navigation }) {
         //   );
         // });
 
-      //   db.transaction(tx => {
-      //     tx.executeSql(
-      //         `ALTER TABLE Goal ADD COLUMN TotalVolume NUMERIC DEFAULT (0)`, [],
-      //         () => {
-      //             console.log('NewColumn added to Drink table successfully');
-      //         },
-      //         (_, error) => {
-      //             console.error('Error adding NewColumn to Drink table:', error);
-      //         }
-      //     );
-      // });
-
+        // db.transaction(tx => {
+        //   tx.executeSql(
+        //       `ALTER TABLE Goal ADD COLUMN TotalWaterIntake NUMERIC DEFAULT (0)`, [],
+        //       () => {
+        //           console.log('NewColumn added to Drink table successfully');
+        //       },
+        //       (_, error) => {
+        //           console.error('Error adding NewColumn to Drink table:', error);
+        //       }
+        //   );
+        // });
     });
+
   }, []);
 
   const resetGoalsTable = () => { // For future use to reset goals table
@@ -435,7 +441,12 @@ export default function HomeScreen({ navigation }) {
                           totalVolume: totalVolume,
                           totalCalories: totalCalories,
                           totalSugar: totalSugar,
-                          TotalCaffeine: TotalCaffeine
+                          totalWaterIntake: totalWaterIntake,
+                          TotalCaffeine: TotalCaffeine,
+                          waterIntakeGoal: waterIntakeGoal,
+                          calorieGoal: calorieGoal,
+                          sugarGoal: sugarGoal,
+                          caffeineGoal: caffeineGoal,
                         })}>
                         <Text style={styles.sectionTitleTextSmallGoal}>Goals</Text>
                       </TouchableOpacity>
@@ -482,12 +493,6 @@ export default function HomeScreen({ navigation }) {
                       </View>
                     </View>
                   </Modal>
-              
-
-                
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.roundButton} onPress={() => setIsAddMode(true)}>
-                  <Text style={styles.buttonText}>+</Text>
                 </TouchableOpacity>
               </View>
               <Modal 
