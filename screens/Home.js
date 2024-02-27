@@ -493,7 +493,10 @@ export default function HomeScreen({ navigation }) {
                       </View>
                     </View>
                   </Modal>
-                </TouchableOpacity>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity style={styles.roundButton} onPress={() => setIsAddMode(true)}>
+                    <Text style={styles.buttonText}>+</Text>
+                  </TouchableOpacity>
               </View>
               <Modal 
               visible={isAddMode} 
