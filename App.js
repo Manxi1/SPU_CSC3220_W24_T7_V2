@@ -25,6 +25,11 @@ export default function App() {
   const [totalCalories, setTotalCalories] = useState(0);
   const [totalSugar, setTotalSugar] = useState(0);
   const [TotalCaffeine, setTotalCaffeine] = useState(0);
+  const [totalWaterIntake, setTotalWaterIntake] = useState(0);
+  const [waterIntakeGoal, setWaterIntakeGoal] = useState(1);
+  const [calorieGoal, setCalorieGoal] = useState(1);
+  const [sugarGoal, setSugarGoal] = useState(1);
+  const [caffeineGoal, setCaffeineGoal] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -38,10 +43,20 @@ export default function App() {
         setTotalVolume,
         totalCalories,
         setTotalCalories,
+        totalWaterIntake,
+        setTotalWaterIntake,
+        waterIntakeGoal,
+        setWaterIntakeGoal,
         totalSugar,
         setTotalSugar,
         TotalCaffeine,
-        setTotalCaffeine
+        setTotalCaffeine,
+        calorieGoal,
+        setCalorieGoal,
+        sugarGoal,
+        setSugarGoal,
+        caffeineGoal,
+        setCaffeineGoal,
       }}>
         <NavigationContainer>
             <Stack.Navigator

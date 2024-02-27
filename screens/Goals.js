@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Alert, Animated } from 'react-native';
+import { Alert, Animated, Image } from 'react-native';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Modal, PanResponder} from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { TabView, SceneMap } from 'react-native-tab-view';
@@ -11,26 +11,34 @@ import SwipeGesture from 'react-native-swipe-gestures';
 
 export default function HomeScreen({ navigation }) {
   const { totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
-    totalSugar, setTotalSugar, TotalCaffeine, setTotalCaffeine } = useContext(AppContext);
-
+    totalSugar, setTotalSugar, totalWaterIntake, setTotalWaterIntake,
+    TotalCaffeine, setTotalCaffeine, waterIntakeGoal, setWaterIntakeGoal, calorieGoal, 
+    setCalorieGoal, sugarGoal, setSugarGoal, caffeineGoal, setCaffeineGoal } = useContext(AppContext);
   const [isAddMode, setIsAddMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
-  const animation = useRef(new Animated.Value(0));
-  const [count, setCount] = useState(0);
+  const [swipeCount, setSwipeCount] = useState(0);
+  const [waterGoalCircle, setwaterGoalCircle] = useState(true);
+  const [calorieGoalCircle, setcalorieGoalCircle] = useState(false);
+  const [sugarGoalCircle, setSugarGoalCircle] = useState(false);
 
-  const [swipeDirection, setSwipeDirection] = useState('');
+  const [waterProgress, setWaterProgress] = useState(30); //temporary value for the progress bar
 
-  const onSwipeUp = () => {
-    setSwipeDirection('up');
+  const onSwipeLeft = () => {
+    setSwipeCount(swipeCount + 1);
+    if (swipeCount === 2) {
+      setSwipeCount(0);
+    }
   };
-
-  const onSwipeDown = () => {
-    setSwipeDirection('down');
+  const onSwipeRight = () => {
+    setSwipeCount(swipeCount - 1);
+    if (swipeCount === 0) {
+      setSwipeCount(2);
+    }
   };
 
   const config = {
-    velocityThreshold: 0.3,
+    velocityThreshold: 0.1,
     directionalOffsetThreshold: 80,
   };
 
@@ -87,10 +95,7 @@ export default function HomeScreen({ navigation }) {
   const handleAddTask = () => {
     Keyboard.dismiss();
    setIsAddMode(false);
-    
-
-    
-  
+   
     const handleBackButton = () => {
       setIsMenuOpen(false); // Close the menu
     };
@@ -111,6 +116,10 @@ export default function HomeScreen({ navigation }) {
     // });
   };
 
+  const inputWaterGoal = (input) => {
+    setWaterIntakeGoal(input);
+  };
+
 
   return (
     
@@ -125,36 +134,95 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
 
-          <View style={styles.todaysGoalTitle}>
-            <Text>Todays Goals</Text>
-          </View>
+          <View style={styles.todaysGoalContainer}>
+            <SwipeGesture
+              onSwipeLeft={onSwipeLeft}
+              onSwipeRight={onSwipeRight}
+              config={config}
+              style={styles.swipeBox} // Added a background color for visibility
+            >
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
 
-          {/* <SwipeGesture
-            onSwipeUp={onSwipeUp}
-            onSwipeDown={onSwipeDown}
-            config={config}
-            style={{ flex: 1 }}
-          >
-            <View>
-              <Text>{swipeDirection}</Text>
-            </View>
-          </SwipeGesture> */}
+                {(swipeCount === 0) && (
+                  <>
+                    <Text style={styles.goalsTitle}>Water Intake Goal</Text>
+                    <AnimatedCircularProgress
+                      size={150} // size of the progress bar
+                      width={13} // width of the progress ring
+                      fill={(waterProgress/waterIntakeGoal)*100} // percentage of the progress
+                      tintColor="#00FF00" // color of the progress bar
+                      backgroundColor="#D3D3D3" // color of the remaining progress
+                      rotation={0} // start position of the progress bar
+                      style={{ bottom: -50 }}
+                      children={() => 
+                        <View>
+                          <Text>{Math.round((waterProgress/waterIntakeGoal)*100)}%</Text>
+                          <Text>{Math.round(100 - (waterProgress/waterIntakeGoal)*100)}% right</Text>
+                        </View>
+                      }
+                    />
+                    <View style={styles.alignEclipse}>
+                      <View style={styles.blackElipses} />
+                      <View style={styles.greyElipses} />
+                      <View style={styles.greyElipses} />
+                    </View>
+                  </>
+                )}
+                
+                {(swipeCount === 1) && (
+                  <>
+                    <Text style={styles.goalsTitle}>Calorie Intake Goal</Text>
+                    <AnimatedCircularProgress
+                      size={150} // size of the progress bar
+                      width={13} // width of the progress ring
+                      fill={((waterProgress/calorieGoal)*100)} // percentage of the progress
+                      tintColor="#00FF00" // color of the progress bar
+                      backgroundColor="#D3D3D3" // color of the remaining progress
+                      rotation={0} // start position of the progress bar
+                      style={{ bottom: -50 }}
+                      children={() => 
+                        <View>
+                          <Text>{Math.round((waterProgress/calorieGoal)*100)}%</Text>
+                          <Text>{Math.round(100 - (waterProgress/calorieGoal)*100)}% left</Text>
+                        </View>
+                      }
+                    />
+                    <View style={styles.alignEclipse}>
+                      <View style={styles.greyElipses} />
+                      <View style={styles.blackElipses} />
+                      <View style={styles.greyElipses} />
+                    </View>
+                  </>
+                )}
 
-
-          <AnimatedCircularProgress
-            size={100} // size of the progress bar
-            width={10} // width of the progress ring
-            fill={count} // percentage of the progress
-            tintColor="black" // color of the progress bar
-            backgroundColor="#D3D3D3" // color of the remaining progress
-            rotation={0} // start position of the progress bar
-            children={() => 
-              <View>
-                <Text>{count}%</Text>
-                <Text>{count}% left</Text>
+                {(swipeCount === 2) && (
+                  <>
+                    <Text style={styles.goalsTitle}>Calorie Intake Goal</Text>
+                    <AnimatedCircularProgress
+                      size={150} // size of the progress bar
+                      width={13} // width of the progress ring
+                      fill={((waterProgress/calorieGoal)*100)} // percentage of the progress
+                      tintColor="#00FF00" // color of the progress bar
+                      backgroundColor="#D3D3D3" // color of the remaining progress
+                      rotation={0} // start position of the progress bar
+                      style={{ bottom: -50 }}
+                      children={() => 
+                        <View>
+                          <Text>{Math.round((waterProgress/calorieGoal)*100)}%</Text>
+                          <Text>{Math.round(100 - (waterProgress/calorieGoal)*100)}% left</Text>
+                        </View>
+                      }
+                    />
+                    <View style={styles.alignEclipse}>
+                      <View style={styles.greyElipses} />
+                      <View style={styles.greyElipses} />
+                      <View style={styles.blackElipses} />
+                    </View>
+                  </>
+                )}
               </View>
-            }
-          />
+            </SwipeGesture>
+          </View>
 
             <TouchableOpacity onPress={updateProgressBar} style={styles.totalButton}>
               <Text style={styles.totalButtonText}>Update Bar</Text>
@@ -182,14 +250,31 @@ export default function HomeScreen({ navigation }) {
                 <View style = {styles.textInputView}>
                   <TextInput
                   style={styles.input}
-                  placeholder={'Drink Name'}/>
-                  <TextInput
-                  style={styles.input}
-                  placeholder={'Volume (ml)'}
+                  placeholder={'Water Goal (ml)'}
+                  keyboardType={'numeric'}
+                  number={waterIntakeGoal}
+                  onChangeText={(input)=> inputWaterGoal(input)}
                   />
                   <TextInput
-                  style={styles.inputMessage}
-                  placeholder={'Notes'}
+                  style={styles.input}
+                  placeholder={'Calorie Goal'}
+                  keyboardType={'numeric'}
+                  number={calorieGoal}
+                  onChangeText={(text)=> setCalorieGoal(text)}
+                  />
+                  <TextInput
+                  style={styles.input}
+                  placeholder={'Sugar Goal'}
+                  keyboardType={'numeric'}
+                  number={sugarGoal}
+                  onChangeText={(text)=> setSugarGoal(text)}
+                  />
+                  <TextInput
+                  style={styles.input}
+                  placeholder={'Caffeine Goal'}
+                  keyboardType={'numeric'}
+                  number={caffeineGoal}
+                  onChangeText={(text)=> setCaffeineGoal(text)}
                   />
                 </View>
 
