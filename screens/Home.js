@@ -14,11 +14,18 @@ export default function HomeScreen({ navigation }) {
   const [drinkName, setDrinkName] = useState('');
   const [drinkVolume, setDrinkVolume] = useState('');
   const [drinknotes, setDrinkNotes] = useState('');
+  const [selectedDrink, setSelectedDrink] = useState(null);
   const [taskItems, setTaskItems] = useState([]);
   const [isAddMode, setIsAddMode] = useState(false);
   const [DrinkTracker, setDrinkTracker] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
+  const [selectedDrinkInfo, setSelectedDrinkInfo] = useState({
+    sugar: 0,
+    caffeine: 0,
+    calories: 0
+  }); // New state for selected drink info
+
   // const [totalVolume, setTotalVolume] = useState(0);
   // const [totalCalories, setTotalCalories] = useState(0);
   // const [totalSugar, setTotalSugar] = useState(0);
@@ -324,18 +331,32 @@ export default function HomeScreen({ navigation }) {
       const handleInputChange = (text) => {
         setSearchTerm(text);
         // Perform your search logic here to get suggestions based on the input text
-        // For simplicity, I'm just filtering a predefined list of suggestions
-        const filteredSuggestions = mockSuggestions.filter(suggestion =>
-          suggestion.toLowerCase().includes(text.toLowerCase())
-        );
+        // For simplicity, I'm just filtering the predefined drinksData array
+        const filteredSuggestions = drinksData
+          .filter(drink => drink.name.toLowerCase().includes(text.toLowerCase()))
+          .map(drink => drink.name)
+          .slice(0, 2);
+      
         setSuggestions(filteredSuggestions);
-        setIsSuggestionVisible(!!text); // Show suggestions if text is not empty
+        setIsSuggestionVisible(!!text);
+         // Show suggestions if text is not empty
       };
       
       const handleSuggestionSelect = (drinkname) => {
         setSearchTerm(drinkname);
         setIsSuggestionVisible(false); // Hide suggestions after selection
         setDrinkName(drinkname); // Update the drinkName state with the selected drink name
+    
+        // Find the selected drink from drinksData
+        const selected = drinksData.find(drink => drink.name === drinkname);
+        if (selected) {
+          setSelectedDrink(selected);
+          setSelectedDrinkInfo({
+            sugar: selected.sugar,
+            caffeine: selected.caffeine,
+            calories: selected.calories
+          });
+        }
       };
       
       const renderSuggestionItem = ({ drinkname }) => (
@@ -344,83 +365,85 @@ export default function HomeScreen({ navigation }) {
         </TouchableOpacity>
       );
       
-      const mockSuggestions = [
-        'Water',
-        'Green Tea',
-        'Black Tea',
-        'Coffee (black)',
-        'Herbal Tea (such as chamomile)',
-        'Matcha Latte',
-        'Chai Latte',
-        'Fruit Smoothie (made with yogurt)',
-        'Iced Tea (sweetened)',
-        'Lemonade',
-        'Orange Juice',
-        'Cranberry Juice',
-        'Coconut Water',
-        'Apple Cider',
-        'Pomegranate Juice',
-        'Grapefruit Juice',
-        'Tomato Juice',
-        'Carrot Juice',
-        'Pineapple Juice',
-        'Mango Lassi',
-        'Hot Chocolate',
-        'Milkshake',
-        'Root Beer Float',
-        'Shirley Temple',
-        'Arnold Palmer (half lemonade, half iced tea)',
-        'Italian Soda',
-        'Agua Fresca',
-        'Kombucha',
-        'Yerba Mate',
-        'Horchata',
-        'Aloe Vera Juice',
-        'Bubble Tea (Tapioca)',
-        'Agave Lemonade',
-        'Lavender Lemonade',
-        'Mint Julep',
-        'Watermelon Cooler',
-        'Virgin Mojito',
-        'Elderflower Cordial',
-        'Peach Iced Tea',
-        'Hibiscus Tea',
-        'Almond Milk',
-        'Rice Milk',
-        'Soy Milk',
-        'Oat Milk',
-        'Sparkling Water',
-        'Ginger Beer',
-        'Club Soda',
-        'Coca-Cola',
-        'Pepsi',
-        'Mountain Dew',
-        'Sprite',
-        'Dr Pepper',
-        'Fanta Orange',
-        '7UP',
-        'A&W Root Beer',
-        'Coca-Cola Zero Sugar',
-        'Diet Pepsi',
-        'Pepsi Zero Sugar',
-        'Diet Coke',
-        'Barqs Root Beer',
-        'Canada Dry Ginger Ale',
-        'Mug Root Beer',
-        'Sprite Zero Sugar',
-        'Dr Pepper Cherry',
-        'Sierra Mist',
-        'Crush Orange',
-        'Squirt',
-        'Coca-Cola Vanilla',
-        'Mountain Dew Code Red',
-        'Sunkist Orange',
-        'Fanta Grape',
-        'A&W Cream Soda',
-
-        // Add more suggestions as needed
+      const drinksData = [
+        { name: "Water", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: 0 },
+        { name: "Green Tea", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: "0.025-0.035mg" },
+        { name: "Black Tea", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: "0.025-0.048mg" },
+        { name: "Coffee (black)", servingSize: "1 ml", calories: 0.002, sugar: 0, caffeine: "0.095mg" },
+        { name: "Herbal Tea (such as chamomile)", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: 0 },
+        { name: "Matcha Latte", servingSize: "1 ml", calories: 1.3, sugar: 0.15, caffeine: "0.07mg" },
+        { name: "Chai Latte", servingSize: "1 ml", calories: 1.5, sugar: 0.25, caffeine: "0.05mg" },
+        { name: "Fruit Smoothie (made with yogurt)", servingSize: "1 ml", calories: "0.2-0.3", sugar: "0.03-0.04", caffeine: 0 },
+        { name: "Iced Tea (sweetened)", servingSize: "1 ml", calories: 0.9, sugar: 0.22, caffeine: "0.015-0.03mg" },
+        { name: "Lemonade", servingSize: "1 ml", calories: 1, sugar: 0.27, caffeine: 0 },
+        { name: "Orange Juice", servingSize: "1 ml", calories: 1.1, sugar: 0.22, caffeine: 0 },
+        { name: "Cranberry Juice", servingSize: "1 ml", calories: 1.4, sugar: 0.31, caffeine: 0 },
+        { name: "Coconut Water", servingSize: "1 ml", calories: 0.45, sugar: 0.06, caffeine: 0 },
+        { name: "Apple Cider", servingSize: "1 ml", calories: 1.2, sugar: 0.28, caffeine: 0 },
+        { name: "Pomegranate Juice", servingSize: "1 ml", calories: 1.3, sugar: 0.31, caffeine: 0 },
+        { name: "Grapefruit Juice", servingSize: "1 ml", calories: 0.96, sugar: 0.22, caffeine: 0 },
+        { name: "Tomato Juice", servingSize: "1 ml", calories: 0.41, sugar: 0.1, caffeine: 0 },
+        { name: "Carrot Juice", servingSize: "1 ml", calories: 0.94, sugar: 0.22, caffeine: 0 },
+        { name: "Pineapple Juice", servingSize: "1 ml", calories: 1.33, sugar: 0.32, caffeine: 0 },
+        { name: "Mango Lassi", servingSize: "1 ml", calories: 2, sugar: 0.32, caffeine: 0 },
+        { name: "Hot Chocolate", servingSize: "1 ml", calories: 2, sugar: 0.25, caffeine: "0.005-0.02mg" },
+        { name: "Milkshake", servingSize: "1 ml", calories: "3-5", sugar: "0.04-0.06", caffeine: 0 },
+        { name: "Root Beer Float", servingSize: "1 ml", calories: 3, sugar: 0.4, caffeine: 0 },
+        { name: "Shirley Temple", servingSize: "1 ml", calories: 1.5, sugar: 0.3, caffeine: 0 },
+        { name: "Arnold Palmer (half lemonade, half iced tea)", servingSize: "1 ml", calories: 1, sugar: 0.25, caffeine: "0.015-0.03mg" },
+        { name: "Italian Soda", servingSize: "1 ml", calories: 2, sugar: 0.4, caffeine: 0 },
+        { name: "Agua Fresca", servingSize: "1 ml", calories: "0.1-0.15", sugar: "0.025-0.035", caffeine: 0 },
+        { name: "Kombucha", servingSize: "1 ml", calories: 0.03, sugar: 0.004, caffeine: "0.015-0.03mg" },
+        { name: "Yerba Mate", servingSize: "1 ml", calories: 0.03, sugar: 0, caffeine: "0.85mg" },
+        { name: "Horchata", servingSize: "1 ml", calories: 2, sugar: 0.3, caffeine: 0 },
+        { name: "Aloe Vera Juice", servingSize: "1 ml", calories: 0.05, sugar: 0.01, caffeine: 0 },
+        { name: "Bubble Tea (Tapioca)", servingSize: "1 ml", calories: "0.3-0.4", sugar: "0.04-0.06", caffeine: 0 },
+        { name: "Agave Lemonade", servingSize: "1 ml", calories: 1.5, sugar: 0.35, caffeine: 0 },
+        { name: "Lavender Lemonade", servingSize: "1 ml", calories: 1.2, sugar: 0.3, caffeine: 0 },
+        { name: "Mint Julep", servingSize: "1 ml", calories: 1.5, sugar: 0.3, caffeine: 0 },
+        { name: "Watermelon Cooler", servingSize: "1 ml", calories: 1, sugar: 0.25, caffeine: 0 },
+        { name: "Virgin Mojito", servingSize: "1 ml", calories: 0.8, sugar: 0.2, caffeine: 0 },
+        { name: "Elderflower Cordial", servingSize: "1 ml", calories: 0.8, sugar: 0.2, caffeine: 0 },
+        { name: "Peach Iced Tea", servingSize: "1 ml", calories: 0.8, sugar: 0.2, caffeine: "0.015-0.03mg" },
+        { name: "Hibiscus Tea", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: 0 },
+        { name: "Almond Milk", servingSize: "1 ml", calories: 0.06, sugar: 0, caffeine: 0 },
+        { name: "Rice Milk", servingSize: "1 ml", calories: 0.12, sugar: 0.01, caffeine: 0 },
+        { name: "Soy Milk", servingSize: "1 ml", calories: 0.08, sugar: 0.006, caffeine: 0 },
+        { name: "Oat Milk", servingSize: "1 ml", calories: 0.12, sugar: 0.007, caffeine: 0 },
+        { name: "Horchata", servingSize: "1 ml", calories: 2, sugar: 0.3, caffeine: 0 },
+        { name: "Aloe Vera Juice", servingSize: "1 ml", calories: 0.05, sugar: 0.01, caffeine: 0 },
+        { name: "Coconut Milk", servingSize: "1 ml", calories: 0.045, sugar: 0, caffeine: 0 },
+        { name: "Sparkling Water", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: 0 },
+        { name: "Ginger Beer", servingSize: "1 ml", calories: 0.12, sugar: 0.03, caffeine: 0 },
+        { name: "Club Soda", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: 0 },
+        { name: "Coca-Cola", servingSize: "1 ml", calories: 1.166666667, sugar: 0.325, caffeine: "0.034mg" },
+        { name: "Pepsi", servingSize: "1 ml", calories: 1.25, sugar: 0.341666667, caffeine: "0.038mg" },
+        { name: "Mountain Dew", servingSize: "1 ml", calories: 1.416666667, sugar: 0.383333333, caffeine: "0.054mg" },
+        { name: "Sprite", servingSize: "1 ml", calories: 1.166666667, sugar: 0.316666667, caffeine: 0 },
+        { name: "Dr Pepper", servingSize: "1 ml", calories: 1.25, sugar: 0.333333333, caffeine: "0.041mg" },
+        { name: "Fanta Orange", servingSize: "1 ml", calories: 1.333333333, sugar: 0.366666667, caffeine: 0 },
+        { name: "7UP", servingSize: "1 ml", calories: 1.166666667, sugar: 0.316666667, caffeine: 0 },
+        { name: "A&W Root Beer", servingSize: "1 ml", calories: 1.333333333, sugar: 0.366666667, caffeine: 0 },
+        { name: "Coca-Cola Zero Sugar", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: "0.034mg" },
+        { name: "Diet Pepsi", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: "0.038mg" },
+        { name: "Pepsi Zero Sugar", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: "0.038mg" },
+        { name: "Diet Coke", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: "0.034mg" },
+        { name: "Barq's Root Beer", servingSize: "1 ml", calories: 1.333333333, sugar: 0.366666667, caffeine: "0.022mg" },
+        { name: "Canada Dry Ginger Ale", servingSize: "1 ml", calories: 1.166666667, sugar: 0.3, caffeine: 0 },
+        { name: "Mug Root Beer", servingSize: "1 ml", calories: 1.333333333, sugar: 0.358333333, caffeine: 0 },
+        { name: "Sprite Zero Sugar", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: 0 },
+        { name: "Dr Pepper Cherry", servingSize: "1 ml", calories: 1.25, sugar: 0.333333333, caffeine: "0.041mg" },
+        { name: "Sierra Mist", servingSize: "1 ml", calories: 1.166666667, sugar: 0.316666667, caffeine: 0 },
+        { name: "Crush Orange", servingSize: "1 ml", calories: 1.583333333, sugar: 0.425, caffeine: 0 },
+        { name: "Squirt", servingSize: "1 ml", calories: 1.333333333, sugar: 0.325, caffeine: "0.038mg" },
+        { name: "Coca-Cola Vanilla", servingSize: "1 ml", calories: 1.166666667, sugar: 0.325, caffeine: "0.034mg" },
+        { name: "Mountain Dew Code Red", servingSize: "1 ml", calories: 1.416666667, sugar: 0.383333333, caffeine: "0.054mg" },
+        { name: "Sunkist Orange", servingSize: "1 ml", calories: 1.583333333, sugar: 0.408333333, caffeine: 0 },
+        { name: "Fanta Grape", servingSize: "1 ml", calories: 1.333333333, sugar: 0.366666667, caffeine: 0 },
+        { name: "A&W Cream Soda", servingSize: "1 ml", calories: 1.5, sugar: 0.383333333, caffeine: 0 },
+        // Add more drinks here
       ];
-      
+  // Add more drinks here 
       // Inside your render return
       
       
@@ -500,9 +523,9 @@ export default function HomeScreen({ navigation }) {
                   <View style = {styles.modalView}>
                     <View style = {styles.textInputView}>
                     <View style={styles.container}>
-        {/* Your existing JSX */}
+                          
         <TextInput
-          style={styles.input}
+          style={styles.inputDrinks}
           placeholder="Search for a drink..."
           value={searchTerm}
           onChangeText={handleInputChange}

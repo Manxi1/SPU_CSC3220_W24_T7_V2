@@ -115,28 +115,28 @@ const styles = StyleSheet.create({
       flexWrap: 'wrap',
     },
     modalView:{
-      backgroundColor: 'lightgrey',
+      backgroundColor: 'white',
       padding: 20,
       borderTopLeftRadius: 50,
       borderTopRightRadius: 50,
-      width: '105%',
+      width: '106%',
+      bottom: 0,
       // flexDirection: 'row',
       // justifyContent: 'space-between',
       // alignItems: 'center',
-      // flexWrap: 'wrap',
+      //flexWrap: 'wrap',
     },
     input:{
       paddingVertical: 15,
       paddingHorizontal: 10,
-      backgroundColor: 'lightgrey',
       borderRadius: 30,
       borderColor: '#C0C0C0',
       borderWidth: 1,
       width: 180,
       left: 4,
       backgroundColor: 'white',
-      marginBottom: 30,
-  
+      marginBottom: 46,
+      bottom: 1,
     },
     menuContainer: {
       flex: 1,
@@ -181,8 +181,9 @@ const styles = StyleSheet.create({
       borderRadius: 30,
       borderColor: '#C0C0C0',
       borderWidth: 2,
-      width: 300,
+      width: 350,
       marginBottom: 1,
+      marginTop: -10,
     },
 
     totalVolumeButton: {
@@ -249,5 +250,25 @@ const styles = StyleSheet.create({
     scene:{
       flex: 1
     },
+   suggestionItem: {
+    borderRadius: 10,
+    top: -39,
+    marginTop: 1,
+    marginBottom: -8,
+    bottom: 1,
+   },
+   
+   inputDrinks:{
+     paddingVertical: 16,
+      paddingHorizontal: 11,
+      borderRadius: 30,
+      borderColor: '#C0C0C0',
+      borderWidth: 1,
+      width: 200,
+      left: -9,
+      backgroundColor: 'white',
+      marginBottom: 46,
+      bottom: 1,
+   },
     })
 export default styles;
