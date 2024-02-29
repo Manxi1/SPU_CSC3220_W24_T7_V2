@@ -1,6 +1,5 @@
-
-import React, { useState} from 'react';
-import { View, Text, drinkStylesheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import drinkStyles from './drinkStyles.js';
 
@@ -14,7 +13,7 @@ const Drink = (props) => {
   const handleClosePress = () => {
     setBarVisible(false);
   };
-  
+
   const handleDeleteItem = (index) => {
     props.completeTask(index);
   };
@@ -31,7 +30,6 @@ const Drink = (props) => {
             </TouchableOpacity>
             <Text style={drinkStyles.itemText}>{props.drink}</Text>
             {!!props.volume && <Text style={drinkStyles.itemText}> {props.volume}ml</Text>}
-            {/* {!!props.notes && <Text style={drinkStyles.itemText}> {props.notes}</Text>} */}
           </View>
           <View style={drinkStyles.menu}>
             <TouchableOpacity style={drinkStyles.button} onPress={handlePress}>
@@ -41,11 +39,11 @@ const Drink = (props) => {
         </View>
         {isBarVisible && (
           <View style={drinkStyles.floatingBar}>
-            <Text style={drinkStyles.inputBar}>Notes: {props.notes}</Text>
-            <Text>Calorie: </Text>
-            <Text>Sugar :</Text>
-            <Text>Caffeine: </Text>
-            <TouchableOpacity onPress={handleClosePress} style = {drinkStyles.floatingBarBackButton}>
+            <Text style={drinkStyles.inputBar}>Notes: {props.notes ? props.notes : 'No notes  provided'}</Text>
+            <Text>Calories: {props.calories || 0}</Text>
+            <Text>Sugar: {props.sugar || 0}</Text>
+            <Text>Caffeine: {props.caffeine || 0}</Text>
+            <TouchableOpacity onPress={handleClosePress} style={drinkStyles.floatingBarBackButton}>
               <Text style={drinkStyles.closingbuttonText}>Back</Text>
             </TouchableOpacity>
           </View>
