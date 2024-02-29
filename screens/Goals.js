@@ -18,22 +18,19 @@ export default function HomeScreen({ navigation }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
   const [swipeCount, setSwipeCount] = useState(0);
-  const [waterGoalCircle, setwaterGoalCircle] = useState(true);
-  const [calorieGoalCircle, setcalorieGoalCircle] = useState(false);
-  const [sugarGoalCircle, setSugarGoalCircle] = useState(false);
 
-  const [waterProgress, setWaterProgress] = useState(30); //temporary value for the progress bar
+  const [waterProgress, setWaterProgress] = useState(0); //temporary value for the progress bar
 
   const onSwipeLeft = () => {
     setSwipeCount(swipeCount + 1);
-    if (swipeCount === 2) {
+    if (swipeCount === 3) {
       setSwipeCount(0);
     }
   };
   const onSwipeRight = () => {
     setSwipeCount(swipeCount - 1);
     if (swipeCount === 0) {
-      setSwipeCount(2);
+      setSwipeCount(3);
     }
   };
 
@@ -149,7 +146,7 @@ export default function HomeScreen({ navigation }) {
                     <AnimatedCircularProgress
                       size={150} // size of the progress bar
                       width={13} // width of the progress ring
-                      fill={(waterProgress/waterIntakeGoal)*100} // percentage of the progress
+                      fill={waterProgress ? (waterProgress/waterIntakeGoal)*100 : 0.01} // percentage of the progress
                       tintColor="#00FF00" // color of the progress bar
                       backgroundColor="#D3D3D3" // color of the remaining progress
                       rotation={0} // start position of the progress bar
@@ -157,12 +154,13 @@ export default function HomeScreen({ navigation }) {
                       children={() => 
                         <View>
                           <Text>{Math.round((waterProgress/waterIntakeGoal)*100)}%</Text>
-                          <Text>{Math.round(100 - (waterProgress/waterIntakeGoal)*100)}% right</Text>
+                          <Text>{Math.round(100 - (waterProgress/waterIntakeGoal)*100)}% left</Text>
                         </View>
                       }
                     />
                     <View style={styles.alignEclipse}>
                       <View style={styles.blackElipses} />
+                      <View style={styles.greyElipses} />
                       <View style={styles.greyElipses} />
                       <View style={styles.greyElipses} />
                     </View>
@@ -191,29 +189,58 @@ export default function HomeScreen({ navigation }) {
                       <View style={styles.greyElipses} />
                       <View style={styles.blackElipses} />
                       <View style={styles.greyElipses} />
+                      <View style={styles.greyElipses} />
                     </View>
                   </>
                 )}
 
                 {(swipeCount === 2) && (
                   <>
-                    <Text style={styles.goalsTitle}>Calorie Intake Goal</Text>
+                    <Text style={styles.goalsTitle}>Sugar Intake Goal</Text>
                     <AnimatedCircularProgress
                       size={150} // size of the progress bar
                       width={13} // width of the progress ring
-                      fill={((waterProgress/calorieGoal)*100)} // percentage of the progress
+                      fill={((waterProgress/sugarGoal)*100)} // percentage of the progress
                       tintColor="#00FF00" // color of the progress bar
                       backgroundColor="#D3D3D3" // color of the remaining progress
                       rotation={0} // start position of the progress bar
                       style={{ bottom: -50 }}
                       children={() => 
                         <View>
-                          <Text>{Math.round((waterProgress/calorieGoal)*100)}%</Text>
-                          <Text>{Math.round(100 - (waterProgress/calorieGoal)*100)}% left</Text>
+                          <Text>{Math.round((waterProgress/sugarGoal)*100)}%</Text>
+                          <Text>{Math.round(100 - (waterProgress/sugarGoal)*100)}% left</Text>
                         </View>
                       }
                     />
                     <View style={styles.alignEclipse}>
+                      <View style={styles.greyElipses} />
+                      <View style={styles.greyElipses} />
+                      <View style={styles.blackElipses} />
+                      <View style={styles.greyElipses} />
+                    </View>
+                  </>
+                )}
+
+                {(swipeCount === 3) && (
+                  <>
+                    <Text style={styles.goalsTitle}>Caffeine Intake Goal</Text>
+                    <AnimatedCircularProgress
+                      size={150} // size of the progress bar
+                      width={13} // width of the progress ring
+                      fill={((waterProgress/caffeineGoal)*100)} // percentage of the progress
+                      tintColor="#00FF00" // color of the progress bar
+                      backgroundColor="#D3D3D3" // color of the remaining progress
+                      rotation={0} // start position of the progress bar
+                      style={{ bottom: -50 }}
+                      children={() => 
+                        <View>
+                          <Text>{Math.round((waterProgress/caffeineGoal)*100)}%</Text>
+                          <Text>{Math.round(100 - (waterProgress/caffeineGoal)*100)}% left</Text>
+                        </View>
+                      }
+                    />
+                    <View style={styles.alignEclipse}>
+                      <View style={styles.greyElipses} />
                       <View style={styles.greyElipses} />
                       <View style={styles.greyElipses} />
                       <View style={styles.blackElipses} />
