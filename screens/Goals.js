@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles.js';
 import AppContext from '../AppContextAPI'; 
 import SwipeGesture from 'react-native-swipe-gestures';
+import moment from 'moment';
 
 
 export default function HomeScreen({ navigation }) {
@@ -18,8 +19,34 @@ export default function HomeScreen({ navigation }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
   const [swipeCount, setSwipeCount] = useState(0);
+  const [currentTime, setCurrentTime] = useState(moment());
 
   const [waterProgress, setWaterProgress] = useState(0); //temporary value for the progress bar
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(moment());
+    }, 1000); // Update time every second
+
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const currentTime = moment();
+      if (currentTime.format('HH:mm:ss') === '23:32:00') {
+        setCaffeineGoal(0);
+        setCalorieGoal(0);
+        setSugarGoal(0);
+        setWaterIntakeGoal(0);
+      }
+    }, 1000); // Check every second
+
+    //Create something to keep track of goals for that day and add them to the database
+
+    return () => clearInterval(interval);
+  }, []); // Empty dependency array means it runs once on component mount
+
 
   const onSwipeLeft = () => {
     setSwipeCount(swipeCount + 1);
@@ -121,7 +148,6 @@ export default function HomeScreen({ navigation }) {
   return (
     
       <View style={styles.container}>
-
           <View style={styles.DrinkWrapper}>
             <View style={styles.sectionTitle}>
                 <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -129,6 +155,14 @@ export default function HomeScreen({ navigation }) {
                 </TouchableOpacity>
                 <Text style={styles.sectionTitleTextBig}>Goals</Text>
             </View>
+          </View>
+
+          <View>
+            <Text>{currentTime.format('HH:mm:ss')}</Text>
+            <Text>{waterIntakeGoal}</Text>
+            <Text>{calorieGoal}</Text>
+            <Text>{sugarGoal}</Text>
+            <Text>{caffeineGoal}</Text>
           </View>
 
           <View style={styles.todaysGoalContainer}>
@@ -250,14 +284,6 @@ export default function HomeScreen({ navigation }) {
               </View>
             </SwipeGesture>
           </View>
-
-            <TouchableOpacity onPress={updateProgressBar} style={styles.totalButton}>
-              <Text style={styles.totalButtonText}>Update Bar</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={resetCount} style={styles.totalButton}>
-              <Text style={styles.totalButtonText}>Reset Bar</Text>
-            </TouchableOpacity>
 
 
           <View style={styles.buttonContainer}>
