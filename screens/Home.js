@@ -9,6 +9,7 @@ import styles from './styles.js';
 import AppContext from '../AppContextAPI'; 
 import ModalDropdown from 'react-native-modal-dropdown';
 import drinksData from './Drinksdata.js';
+
 export default function HomeScreen({ navigation }) {
 
   const [drinkName, setDrinkName] = useState('');
@@ -185,7 +186,8 @@ export default function HomeScreen({ navigation }) {
         'SELECT * FROM Drink',
         [],
         (_, { rows }) => {
-          const data = rows._array.map(item => ({ DrinkId: item.DrinkId, Content: item.Content, Volume: item.Volume , Notes: item.Notes, Calories: item.Calories, Sugar: item.Sugar, Caffeine: item.Caffeine}));
+          const data = rows._array.map(item => ({ DrinkId: item.DrinkId, Content: item.Content, Volume: item.Volume,
+            Notes: item.Notes, Calories: item.Calories, Sugar: item.Sugar, Caffeine: item.Caffeine}));
           //setTaskItems(data);
           setDrinkTracker(data);
         },
@@ -339,8 +341,11 @@ export default function HomeScreen({ navigation }) {
         setSearchTerm(text);
         // Perform your search logic here to get suggestions based on the input text
         // For simplicity, I'm just filtering the predefined drinksData array
-        const filteredSuggestions = drinksData
-          .filter(drink => drink.name.toLowerCase().includes(text.toLowerCase()))
+        console.log('Text:', text);
+        console.log('Drink Data:', drinksData);
+        // const filteredSuggestions = drinksData.filter(drink => drink.name.toLowerCase().includes(text.toLowerCase()))
+        const filteredSuggestions = drinksData[0]
+          .filter(drink => drink.name && drink.name.toLowerCase().includes(text.toLowerCase()))
           .map(drink => drink.name)
           .slice(0, 2);
       
