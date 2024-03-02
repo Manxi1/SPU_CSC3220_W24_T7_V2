@@ -23,3 +23,4 @@ New things to install:
 
 - npm install react-native-circular-progress
 - npm install react-native-swipe-gestures
+- npm install moment

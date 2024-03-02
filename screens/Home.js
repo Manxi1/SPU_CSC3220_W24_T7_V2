@@ -133,7 +133,7 @@ export default function HomeScreen({ navigation }) {
 
         // db.transaction(tx => {
         //   tx.executeSql(
-        //       `ALTER TABLE Goal ADD COLUMN TotalWaterIntake NUMERIC DEFAULT (0)`, [],
+        //       `ALTER TABLE Goal ADD COLUMN TotalVolume NUMERIC DEFAULT (0)`, [],
         //       () => {
         //           console.log('NewColumn added to Drink table successfully');
         //       },
