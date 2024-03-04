@@ -15,14 +15,16 @@ export default function HomeScreen({ navigation }) {
   const [drinkName, setDrinkName] = useState('');
   const [drinkVolume, setDrinkVolume] = useState('');
   const [drinknotes, setDrinkNotes] = useState('');
+  const [drinkCalories, setDrinkCalories] = useState(0);
+  const [drinkSugar, setDrinkSugar] = useState(0);
+  const [drinkCaffeine, setDrinkCaffeine] = useState(0);
   const [selectedDrink, setSelectedDrink] = useState(null);
   const [taskItems, setTaskItems] = useState([]);
   const [isAddMode, setIsAddMode] = useState(false);
   const [DrinkTracker, setDrinkTracker] = useState([]);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
-  const [selectedDrinkInfo, setSelectedDrinkInfo] = useState({ sugar: 0, caffeine: 0, calories: 0 }); // New state for selected drink info
-  
+  const [selectedDrinkInfo, setSelectedDrinkInfo] = useState({ sugar: 0, caffeine: 0, calories: 0 }); // New state for selected drink info  
 
   // const [totalVolume, setTotalVolume] = useState(0);
   // const [totalCalories, setTotalCalories] = useState(0);
@@ -147,30 +149,6 @@ export default function HomeScreen({ navigation }) {
 
   }, []);
 
-  const resetGoalsTable = () => { // For future use to reset goals table
-
-    db.transaction(tx => {
-      tx.executeSql(
-        `UPDATE Goal SET TotalVolume = ? WHERE GoalId = ?`, 
-        [0, 1],
-        (_, results) => {
-          console.log('Results', results.rowsAffected);
-          if (results.rowsAffected > 0) {
-            console.log('Update successful');
-            setTotalVolume(0); // increment refreshKey to force a re-render
-          } else {
-            console.log('Update failed');
-          }
-        },
-        (_, error) => {
-          console.error('Error updating totalVolume in Goals table:', error);
-        }
-      );
-    });
-
-  };
-
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
   };
@@ -242,142 +220,177 @@ export default function HomeScreen({ navigation }) {
     if (parseInt(drinkVolume) < 0) {
       Alert.alert('Warning', 'Drink volume must be a positive number');
       return;
-    }
+    }``
+
     const updatedTotalVolume = totalVolume + parseInt(drinkVolume);
+    const updatedTotalCalories = totalCalories + Math.round(drinkCalories * parseInt(drinkVolume));
+    const updatedTotalSugar = totalSugar + Math.round(drinkSugar * parseInt(drinkVolume));
+    const updatedTotalCaffeine = TotalCaffeine + Math.round(drinkCaffeine * parseInt(drinkVolume));
+
+    const updatedDrinkCalories = Math.round(drinkCalories * parseInt(drinkVolume));
+    const updatedDrinkSugar = Math.round(drinkSugar * parseInt(drinkVolume));
+    const updatedDrinkCaffeine = Math.round(drinkCaffeine * parseInt(drinkVolume));
+
+
     console.log('New Drink:', newDrink); // Log the newDrink value
     console.log('Drink Name:', drinkName); // Log the drink name
     console.log('Drink Volume:', drinkVolume); // Log the drinkVolume value
     console.log('Drink Notes:', drinknotes); // Log the drinknotes value
+    console.log('Drink Calories:', updatedDrinkCalories); 
+    console.log('Drink Sugar:', updatedDrinkSugar); 
+    console.log('Drink Caffeine:', updatedDrinkCaffeine); 
     console.log('Total Volume:', updatedTotalVolume); // Log the updatedTotalVolume value
-    console.log('Drink Sugar: ', selectedDrinkInfo.sugar);
-    console.log('Drink Caffeine: ', selectedDrinkInfo.caffeine);
-    console.log('Drink Calories: ', selectedDrinkInfo.calories);
+    console.log('Total Sugar: ', updatedTotalCalories);
+    console.log('Total Caffeine: ', updatedTotalSugar);
+    console.log('Total Calories: ', updatedTotalCaffeine);
     setTaskItems([...taskItems, newDrink]);
-    setDrinkName('');
+    setSearchTerm('');
     setDrinkVolume('');
     setDrinkNotes('');
+    setDrinkCaffeine('');
+    setDrinkSugar('');
+    setDrinkCalories('');
     setIsAddMode(false);
     
 
     
   
-        const handleBackButton = () => {
-          setIsMenuOpen(false); // Close the menu
-        };
-      
-        // Insert the new drink into the database
-        db.transaction(tx => {
-          tx.executeSql(
-            'INSERT INTO Drink (Content, Volume , Notes) VALUES (?, ? , ?)',
-            [drinkName, parseInt(drinkVolume), drinknotes],
-            (_, { insertId }) => {
-              console.log('Added to database with ID: ', insertId);
-              fetchDrinkTracker(); // Fetch updated DrinkTracker after adding
-            },
-            (_, error) => {
-              console.log('2. Error adding to database: ', error);
-            }
-          );
-
-          tx.executeSql( // Update Goal table with the totalVolume state
-            'UPDATE Goal Set TotalVolume = ? ',
-            [parseInt(updatedTotalVolume)],
-            (_, { insertId }) => {
-              console.log('Updated Goal table');
-              fetchGoal(); // Fetch updated DrinkTracker after adding
-            },
-            (_, error) => {
-              console.log('3. Error adding to database: ', error);
-            }
-          );
-        });
-      };
-
-      const completeTask = (index) => {
-        let itemsCopy = [...taskItems];
-        itemsCopy.splice(index, 1);
-        //setTaskItems(itemsCopy);
-        setDrinkTracker(itemsCopy);
-        const updatedTotalVolume = totalVolume - parseInt(DrinkTracker[index].Volume);
-        setTotalVolume(updatedTotalVolume);
-        const messageId = DrinkTracker[index]?.DrinkId;
-        if (messageId) {
-          db.transaction((tx) => {
-            tx.executeSql(
-              'DELETE FROM Drink WHERE DrinkId = ?',
-              [messageId],
-              () => {
-                console.log('Message deleted from database with ID: ', messageId);
-                fetchDrinkTracker(); // Fetch updated DrinkTracker after deletion
-              },
-              (_, error) => {
-                console.log('4. Error deleting from database: ', error);
-              }
-            );
-          });
-
-          db.transaction((tx) => {
-            tx.executeSql( // Update Goal table with the totalVolume state
-              'UPDATE Goal Set TotalVolume = ? ',
-              [parseInt(updatedTotalVolume)],
-              (_, { insertId }) => {
-                console.log('Updated Goal table');
-                fetchGoal(); // Fetch updated DrinkTracker after adding
-              },
-              (_, error) => {
-                console.log('3. Error adding to database: ', error);
-              }
-            );
-          });
-
+    const handleBackButton = () => {
+      setIsMenuOpen(false); // Close the menu
+    };
+  
+    // Insert the new drink into the database
+    db.transaction(tx => {
+      tx.executeSql(
+        'INSERT INTO Drink (Content, Volume , Notes, Calories, Sugar, Caffeine) VALUES (?, ?, ?, ?, ?, ?)',
+        [drinkName, parseInt(drinkVolume), drinknotes, updatedDrinkCalories, updatedDrinkSugar, updatedDrinkCaffeine],
+        (_, { insertId }) => {
+          console.log('Added to database with ID: ', insertId);
+          fetchDrinkTracker(); // Fetch updated DrinkTracker after adding
+        },
+        (_, error) => {
+          console.log('2. Error adding to database: ', error);
         }
-      };
-
-      const [searchTerm, setSearchTerm] = useState('');
-      const [suggestions, setSuggestions] = useState([]);
-      const [isSuggestionVisible, setIsSuggestionVisible] = useState(false);
-      
-      const handleInputChange = (text) => {
-        setSearchTerm(text);
-        // Perform your search logic here to get suggestions based on the input text
-        // For simplicity, I'm just filtering the predefined drinksData array
-        console.log('Text:', text);
-        console.log('Drink Data:', drinksData);
-        // const filteredSuggestions = drinksData.filter(drink => drink.name.toLowerCase().includes(text.toLowerCase()))
-        const filteredSuggestions = drinksData[0]
-          .filter(drink => drink.name && drink.name.toLowerCase().includes(text.toLowerCase()))
-          .map(drink => drink.name)
-          .slice(0, 2);
-      
-        setSuggestions(filteredSuggestions);
-        setIsSuggestionVisible(!!text);
-         // Show suggestions if text is not empty
-      };
-      
-      const handleSuggestionSelect = (drinkname) => {
-        setSearchTerm(drinkname);
-        setIsSuggestionVisible(false); // Hide suggestions after selection
-        setDrinkName(drinkname); // Update the drinkName state with the selected drink name
-    
-        // Find the selected drink from drinksData
-        const selected = drinksData.find(drink => drink.name === drinkname);
-        if (selected) {
-          setSelectedDrink(selected);
-          setSelectedDrinkInfo({
-            sugar: selected.sugar,
-            caffeine: selected.caffeine,
-            calories: selected.calories
-          });
-          
-          
-        }
-      };
-      
-      const renderSuggestionItem = ({ drinkname }) => (
-        <TouchableOpacity onPress={() => handleSuggestionSelect(drinkname)}>
-          <Text style={styles.itemText}>{drinkname}</Text>
-        </TouchableOpacity>
       );
+
+      // tx.executeSql( // Update Goal table with the totalVolume state
+      //   'UPDATE Goal Set TotalVolume = ? ',
+      //   [parseInt(updatedTotalVolume)],
+      //   (_, { insertId }) => {
+      //     console.log('Updated Goal table');
+      //     fetchGoal(); // Fetch updated DrinkTracker after adding
+      //   },
+      //   (_, error) => {
+      //     console.log('3. Error adding to database: ', error);
+      //   }
+      // );
+      tx.executeSql(
+        'UPDATE Goal SET TotalVolume = ?, TotalCalories = ?, TotalSugar = ?, TotalCaffeine = ?',
+        [parseInt(updatedTotalVolume), updatedTotalCalories, updatedTotalSugar, updatedTotalCaffeine],
+        (_, { insertId }) => {
+          console.log('Updated Goal table');
+          fetchGoal(); // Fetch updated DrinkTracker after adding
+        },
+        (_, error) => {
+          console.log('3. Error adding to database: ', error);
+        }
+      );
+    });
+  };
+
+  const completeTask = (index) => {
+    let itemsCopy = [...taskItems];
+    itemsCopy.splice(index, 1);
+    //setTaskItems(itemsCopy);
+    setDrinkTracker(itemsCopy);
+    const updatedTotalVolume = totalVolume - parseInt(DrinkTracker[index].Volume);
+    const updatedTotalCalories = totalCalories - Math.round(DrinkTracker[index].Calories);
+    const updatedTotalSugar = totalSugar - Math.round(DrinkTracker[index].Sugar);
+    const updatedTotalCaffeine = TotalCaffeine - Math.round(DrinkTracker[index].Caffeine);
+
+
+    setTotalVolume(updatedTotalVolume);
+    const messageId = DrinkTracker[index]?.DrinkId;
+    if (messageId) {
+      db.transaction((tx) => {
+        tx.executeSql(
+          'DELETE FROM Drink WHERE DrinkId = ?',
+          [messageId],
+          () => {
+            console.log('Message deleted from database with ID: ', messageId);
+            fetchDrinkTracker(); // Fetch updated DrinkTracker after deletion
+          },
+          (_, error) => {
+            console.log('4. Error deleting from database: ', error);
+          }
+        );
+      });
+
+      db.transaction((tx) => {
+        tx.executeSql(
+          'UPDATE Goal SET TotalVolume = ?, TotalCalories = ?, TotalSugar = ?, TotalCaffeine = ?',
+          [parseInt(updatedTotalVolume), updatedTotalCalories, updatedTotalSugar, updatedTotalCaffeine],
+          (_, { insertId }) => {
+            console.log('Updated Goal table');
+            fetchGoal(); // Fetch updated DrinkTracker after adding
+          },
+          (_, error) => {
+            console.log('3. Error adding to database: ', error);
+          }
+        );
+      });
+
+    }
+  };
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const [isSuggestionVisible, setIsSuggestionVisible] = useState(false);
+  
+  const handleInputChange = (text) => {
+    setSearchTerm(text);
+    // Perform your search logic here to get suggestions based on the input text
+    // For simplicity, I'm just filtering the predefined drinksData array
+    // console.log('Text:', text);
+    // console.log('Drink Data:', drinksData);
+    // const filteredSuggestions = drinksData.filter(drink => drink.name.toLowerCase().includes(text.toLowerCase()))
+    const filteredSuggestions = drinksData[0]
+      .filter(drink => drink.name && drink.name.toLowerCase().includes(text.toLowerCase()))
+      .map(drink => drink.name)
+      .slice(0, 2);
+    setSuggestions(filteredSuggestions);
+    setIsSuggestionVisible(!!text);
+      // Show suggestions if text is not empty
+  };
+  
+  const handleSuggestionSelect = (drinkname) => {
+    setSearchTerm(drinkname);
+    setIsSuggestionVisible(false); // Hide suggestions after selection
+    setDrinkName(drinkname); // Update the drinkName state with the selected drink name
+
+    // Find the selected drink from drinksData
+    // const selected = drinksData.find(drink => drink.name === drinkname);
+    const selected = drinksData[0].find(drink => drink.name.trim().toLowerCase() === drinkname.trim().toLowerCase());
+    console.log('Selected Drink:', selected);
+    console.log('Selected Drink Info:', selected.sugar, selected.caffeine, selected.calories);
+    if (selected) {
+      setSelectedDrink(selected);
+      setSelectedDrinkInfo({
+        sugar: selected.sugar,
+        caffeine: selected.caffeine,
+        calories: selected.calories
+      });
+      setDrinkCalories(selected.calories);
+      setDrinkSugar(selected.sugar);
+      setDrinkCaffeine(selected.caffeine);
+    }
+  };
+  
+  const renderSuggestionItem = ({ drinkname }) => (
+    <TouchableOpacity onPress={() => handleSuggestionSelect(drinkname)}>
+      <Text style={styles.itemText}>{drinkname}</Text>
+    </TouchableOpacity>
+  );
       
       // const drinksData = [
       //   { name: "Water", servingSize: "1 ml", calories: 0, sugar: 0, caffeine: 0 },
@@ -428,9 +441,9 @@ export default function HomeScreen({ navigation }) {
                           drink={item.Content} 
                           volume={item.Volume}
                           notes={item.Notes} 
-                          sugar={selectedDrinkInfo.sugar * parseInt(item.Volume)}
-                          caffeine={selectedDrinkInfo.caffeine * parseInt(item.Volume)} // Remove unnecessary curly braces
-                          calories={selectedDrinkInfo.calories * parseInt(item.Volume)}
+                          sugar={item.Sugar}
+                          caffeine={item.Caffeine} // Remove unnecessary curly braces
+                          calories={item.Calories}
                           completeTask={() => completeTask(index)} 
                           index={index} 
                         />
@@ -478,26 +491,26 @@ export default function HomeScreen({ navigation }) {
                     <View style = {styles.textInputView}>
                     <View style={styles.container}>
                           
-        <TextInput
-          style={styles.inputDrinks}
-          placeholder="Search for a drink..."
-          value={searchTerm}
-          onChangeText={handleInputChange}
-        />
-        {isSuggestionVisible && (
-          <View style={styles.suggestionsContainer}>
-            {suggestions.map((drinkname, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => handleSuggestionSelect(drinkname)}
-                style={styles.suggestionItem}
-              >
-                <Text>{drinkname}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-      </View>
+                  <TextInput
+                    style={styles.inputDrinks}
+                    placeholder="Search for a drink..."
+                    value={searchTerm}
+                    onChangeText={handleInputChange}
+                  />
+                  {isSuggestionVisible && (
+                    <View style={styles.suggestionsContainer}>
+                      {suggestions.map((drinkname, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => handleSuggestionSelect(drinkname)}
+                          style={styles.suggestionItem}
+                        >
+                          <Text>{drinkname}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  )}
+                </View>
                       <TextInput
                       style={styles.input}
                       placeholder={'Volume (ml)'}
@@ -517,7 +530,7 @@ export default function HomeScreen({ navigation }) {
 
                       <TouchableOpacity
                         onPress={() => {
-                          setDrinkName('');
+                          setSearchTerm('');
                           setDrinkVolume('');
                           setDrinkNotes('');
                           setIsAddMode(false);
