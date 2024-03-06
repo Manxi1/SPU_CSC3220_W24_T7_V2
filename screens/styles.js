@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
     menuButton: { // Menu button
       position: 'absolute',
       top: 50, // Adjust this value to move the button up or down on the page
-      left: 20, // Adjust this value to move the button left or right on the page
+      left: 20,
+      zIndex:1, // Adjust this value to move the button left or right on the page
     },
     menuText: { // Text for the menu button
       fontSize: 30,
