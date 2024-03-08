@@ -9,6 +9,10 @@ import styles from './styles.js';
 import AppContext from '../AppContextAPI'; 
 import ModalDropdown from 'react-native-modal-dropdown';
 import drinksData from './Drinksdata.js';
+// import db from '../database.js';
+import { useFocusEffect } from '@react-navigation/native';
+
+
 
 export default function HomeScreen({ navigation }) {
 
@@ -26,6 +30,7 @@ export default function HomeScreen({ navigation }) {
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
   const [selectedDrinkInfo, setSelectedDrinkInfo] = useState({ sugar: 0, caffeine: 0, calories: 0 }); // New state for selected drink info  
 
+  
   // const [totalVolume, setTotalVolume] = useState(0);
   // const [totalCalories, setTotalCalories] = useState(0);
   // const [totalSugar, setTotalSugar] = useState(0);
@@ -34,7 +39,8 @@ export default function HomeScreen({ navigation }) {
     totalSugar, setTotalSugar, totalWaterIntake, setTotalWaterIntake,
     TotalCaffeine, setTotalCaffeine, waterIntakeGoal, setWaterIntakeGoal, calorieGoal, 
     setCalorieGoal, sugarGoal, setSugarGoal, caffeineGoal, setCaffeineGoal } = useContext(AppContext);
-  const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
+  // const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
+  const db = SQLite.openDatabase('./siplogV2db.db');
 
   useEffect(() => {
     // Create table if not exists
@@ -110,8 +116,8 @@ export default function HomeScreen({ navigation }) {
 
         // db.transaction(tx => {
         //   tx.executeSql(
-        //     'INSERT INTO Goal (TotalVolume, TotalCalories, TotalSugar, TotalCaffeine) VALUES (?, ?, ?, ?)',
-        //     [0, 0, 0, 0], // Replace with the value you want to insert
+        //     'INSERT INTO Goal (WaterIntake) VALUES (?)',
+        //     [0], // Replace with the value you want to insert
         //     (_, result) => {
         //       console.log('Row inserted into Goal');
         //     },
@@ -149,6 +155,14 @@ export default function HomeScreen({ navigation }) {
 
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      // Your refresh logic here
+      setIsMenuOpen(false);
+      setIsTotalPopVisible(false);
+    }, [])
+  );
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
   };
@@ -179,21 +193,24 @@ export default function HomeScreen({ navigation }) {
   const fetchGoal = () => {
     db.transaction(tx => {
       tx.executeSql(
-        'SELECT TotalVolume, TotalCalories, TotalSugar, TotalCaffeine FROM Goal',
+        'SELECT TotalWaterIntake, TotalVolume, TotalCalories, TotalSugar, TotalCaffeine FROM Goal',
         [],
         (_, { rows }) => {
           console.log(rows._array); // Log the entire result set
           // Assuming rows._array is an array containing the result of the SQL query
           if (rows._array.length > 0) {
             const updatedTotalVolume = parseInt(rows._array[0].TotalVolume);
+            const updatedTotalWaterIntake = parseInt(rows._array[0].TotalWaterIntake);
             const updatedTotalCalories = parseInt(rows._array[0].TotalCalories);
             const updatedTotalSugar = parseInt(rows._array[0].TotalSugar);
             const updatedTotalCaffeine = parseInt(rows._array[0].TotalCaffeine);
             setTotalVolume(updatedTotalVolume); // Call setTotalVolume with the retrieved value
+            setTotalWaterIntake(updatedTotalWaterIntake);
             setTotalCalories(updatedTotalCalories);
             setTotalSugar(updatedTotalSugar);
             setTotalCaffeine(updatedTotalCaffeine);
             console.log('Total Volume:', updatedTotalVolume); // Log the retrieved value
+            console.log('Total Water Intake:', updatedTotalWaterIntake);
             console.log('Total Calories:', updatedTotalCalories);
             console.log('Total Sugar:', updatedTotalSugar);
             console.log('Total Caffeine:', updatedTotalCaffeine);
@@ -209,7 +226,6 @@ export default function HomeScreen({ navigation }) {
     });
   };
 
-
   const handleAddTask = () => {
     Keyboard.dismiss();
     const newDrink = `${drinkName} ${drinkVolume} ${drinknotes}`; // Remove the '-' and 'ml'
@@ -220,7 +236,14 @@ export default function HomeScreen({ navigation }) {
     if (parseInt(drinkVolume) < 0) {
       Alert.alert('Warning', 'Drink volume must be a positive number');
       return;
-    }``
+    }
+
+    let updatedTotalWaterIntake = 0;
+    if (drinkName === 'water' || drinkName === 'Water') {
+      console.log('Drink is water');
+      updatedTotalWaterIntake = totalWaterIntake + parseInt(drinkVolume);
+    }
+    
 
     const updatedTotalVolume = totalVolume + parseInt(drinkVolume);
     const updatedTotalCalories = totalCalories + Math.round(drinkCalories * parseInt(drinkVolume));
@@ -285,8 +308,8 @@ export default function HomeScreen({ navigation }) {
       //   }
       // );
       tx.executeSql(
-        'UPDATE Goal SET TotalVolume = ?, TotalCalories = ?, TotalSugar = ?, TotalCaffeine = ?',
-        [parseInt(updatedTotalVolume), updatedTotalCalories, updatedTotalSugar, updatedTotalCaffeine],
+        'UPDATE Goal SET TotalWaterIntake = ?, TotalVolume = ?, TotalCalories = ?, TotalSugar = ?, TotalCaffeine = ?',
+        [updatedTotalWaterIntake, parseInt(updatedTotalVolume), updatedTotalCalories, updatedTotalSugar, updatedTotalCaffeine],
         (_, { insertId }) => {
           console.log('Updated Goal table');
           fetchGoal(); // Fetch updated DrinkTracker after adding
@@ -304,6 +327,7 @@ export default function HomeScreen({ navigation }) {
     //setTaskItems(itemsCopy);
     setDrinkTracker(itemsCopy);
     const updatedTotalVolume = totalVolume - parseInt(DrinkTracker[index].Volume);
+    const updatedTotalWaterIntake = totalWaterIntake - parseInt(DrinkTracker[index].Volume);
     const updatedTotalCalories = totalCalories - Math.round(DrinkTracker[index].Calories);
     const updatedTotalSugar = totalSugar - Math.round(DrinkTracker[index].Sugar);
     const updatedTotalCaffeine = TotalCaffeine - Math.round(DrinkTracker[index].Caffeine);
@@ -328,8 +352,8 @@ export default function HomeScreen({ navigation }) {
 
       db.transaction((tx) => {
         tx.executeSql(
-          'UPDATE Goal SET TotalVolume = ?, TotalCalories = ?, TotalSugar = ?, TotalCaffeine = ?',
-          [parseInt(updatedTotalVolume), updatedTotalCalories, updatedTotalSugar, updatedTotalCaffeine],
+          'UPDATE Goal SET TotalWaterIntake = ?, TotalVolume = ?, TotalCalories = ?, TotalSugar = ?, TotalCaffeine = ?',
+          [updatedTotalWaterIntake, parseInt(updatedTotalVolume), updatedTotalCalories, updatedTotalSugar, updatedTotalCaffeine],
           (_, { insertId }) => {
             console.log('Updated Goal table');
             fetchGoal(); // Fetch updated DrinkTracker after adding
@@ -417,21 +441,12 @@ export default function HomeScreen({ navigation }) {
                     <View style={styles.sectionTitle}>
                       <Text style={styles.sectionTitleTextBig}>Daily Gulp</Text>
                       <TouchableOpacity onPress={() => navigation.navigate("Goals", {
-                          totalVolume: totalVolume,
-                          totalCalories: totalCalories,
-                          totalSugar: totalSugar,
-                          totalWaterIntake: totalWaterIntake,
-                          TotalCaffeine: TotalCaffeine,
-                          waterIntakeGoal: waterIntakeGoal,
-                          calorieGoal: calorieGoal,
-                          sugarGoal: sugarGoal,
-                          caffeineGoal: caffeineGoal,
                         })}>
                         <Text style={styles.sectionTitleTextSmallGoal}>Goals</Text>
                       </TouchableOpacity>
                     </View>
                     <TouchableOpacity onPress={toggleTotalPopup} style={styles.totalVolumeButton}>
-                      <Text style={styles.volumeTitle}>Total Volume: {totalVolume} ml</Text>
+                      <Text style={styles.volumeTitle}>Total Volume: {totalVolume} (ml)</Text>
                       <Text style={styles.volumeFooter}>Click for more</Text>
                     </TouchableOpacity>
                     <View style={styles.items}>
@@ -461,10 +476,11 @@ export default function HomeScreen({ navigation }) {
                     <View style={styles.totalPopup}>
                       <View style={styles.totalPopupView}>
                         <View style={styles.totalPopupText}>
-                          <Text>Total Volume: {totalVolume}</Text>
-                          <Text>Total Calories: {totalCalories}</Text>
-                          <Text>Total Sugar: {totalSugar}</Text>
-                          <Text>Total Caffeine: {TotalCaffeine}</Text>
+                          <Text>Total Volume: {totalVolume} (ml)</Text>
+                          <Text>Total Water Intake: {totalWaterIntake} (ml)</Text>
+                          <Text>Total Calories: {totalCalories} (kcal)</Text>
+                          <Text>Total Sugar: {totalSugar} (g)</Text>
+                          <Text>Total Caffeine: {TotalCaffeine} (mg)</Text>
                           {/* <TouchableOpacity onPress={resetGoalsTable} style={styles.totalPopupClose}>
                             <Text style={styles.addText}>Reset</Text>
                           </TouchableOpacity> */}
