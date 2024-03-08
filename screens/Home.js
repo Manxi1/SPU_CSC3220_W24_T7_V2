@@ -243,6 +243,7 @@ export default function HomeScreen({ navigation }) {
     console.log('Total Sugar: ', updatedTotalCalories);
     console.log('Total Caffeine: ', updatedTotalSugar);
     console.log('Total Calories: ', updatedTotalCaffeine);
+    console.log(currentDate);
     setTaskItems([...taskItems, newDrink]);
     setSearchTerm('');
     setDrinkVolume('');
@@ -391,11 +392,46 @@ export default function HomeScreen({ navigation }) {
       <Text style={styles.itemText}>{drinkname}</Text>
     </TouchableOpacity>
   );
-      
-      
-      
-      
+  const getDayOfWeek = (dateString) => {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const date = new Date(dateString);
+    console.log('Date String:', dateString); // Debugging line
+    console.log('Date Object:', date); // Debugging line
+    console.log('Day of Week:', days[date.getDay()]); // Debugging line
+    return days[date.getDay()];
+  };
+  
+  // Function to format the date as MM-DD-YYYY
+  const getCurrentFormattedDate = () => {
+    const today = new Date();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    const yyyy = today.getFullYear();
+    return `${yyyy}-${mm}-${dd}`; // Changed to ISO 8601 format
+  };
+  
+  // Function to group items by the day of the week
+  const groupByDayOfWeek = (items, currentDate) => {
+    return items.reduce((groups, item) => {
+      const dayOfWeek = getDayOfWeek(currentDate);
+      if (!groups[dayOfWeek]) {
+        groups[dayOfWeek] = [];
+      }
+      groups[dayOfWeek].push({ ...item, createdAt: currentDate });
+      return groups;
+    }, {});
+  };
+  
+  // Get the current formatted date
+  const currentDate = getCurrentFormattedDate();
+  
+  
+  // Group the DrinkTracker items by the day of the week using the current date
+  const groupedItems = groupByDayOfWeek(DrinkTracker, currentDate);
 
+  
+      
+    
       return (
           <View style={styles.container}>
 
@@ -420,20 +456,29 @@ export default function HomeScreen({ navigation }) {
                       <Text style={styles.volumeTitle}>Total Volume: {totalVolume} ml</Text>
                       <Text style={styles.volumeFooter}>Click for more</Text>
                     </TouchableOpacity>
+                    
                     <View style={styles.items}>
-                      {DrinkTracker.map((item, index) => (
-                        <Drink 
-                          key={index} 
-                          drink={item.Content} 
-                          volume={item.Volume}
-                          notes={item.Notes} 
-                          sugar={item.Sugar}
-                          caffeine={item.Caffeine} // Remove unnecessary curly braces
-                          calories={item.Calories}
-                          completeTask={() => completeTask(index)} 
-                          index={index} 
-                        />
+                      {Object.keys(groupedItems).map(day => (
+                        <View key={day}>
+                          <Text>{day}</Text>
+                          {groupedItems[day].map((item, index) => (
+                            <Drink 
+                              key={index} 
+                              drink={item.Content} 
+                              volume={item.Volume}
+                              createdAt={item.createdAt}
+                              notes={item.Notes} 
+                              sugar={item.Sugar}
+                              caffeine={item.Caffeine} // Remove unnecessary curly braces
+                              calories={item.Calories}
+                              completeTask={() => completeTask(index)} 
+                              index={index}
+                              // ... other props
+                            />
+                          ))}
+                        </View>
                       ))}
+                      
                     </View>
                   </View>
 
@@ -465,6 +510,8 @@ export default function HomeScreen({ navigation }) {
                   <TouchableOpacity style={styles.roundButton} onPress={() => setIsAddMode(true)}>
                     <Text style={styles.buttonText}>+</Text>
                   </TouchableOpacity>
+                  
+
               </View>
               <Modal 
               visible={isAddMode} 
