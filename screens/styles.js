@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent: 'flex-start',
       alignItems: 'flex-start',
+      backgroundColor: 'rgba(0,0,0.5,0.5)',
     },
     menuContent: {
       backgroundColor: 'lightgrey',
@@ -248,12 +249,13 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
     },
     swipeBox:{
-      flex: 1, 
+      flex: 1,
       borderColor: '#3d3d5c',
       borderWidth: 2,
-      height: 300, 
+      height: 365, 
       marginHorizontal: 30,
       padding: 20,
+      borderRadius: 20, 
     },
    suggestionItem: {
     borderRadius: 10,
@@ -262,7 +264,6 @@ const styles = StyleSheet.create({
     marginBottom: -8,
     bottom: 1,
    },
-   
    inputDrinks:{
      paddingVertical: 16,
       paddingHorizontal: 11,
@@ -278,6 +279,7 @@ const styles = StyleSheet.create({
     goalsTitle: {
       fontSize: 20,
       fontWeight: 'bold',
+      textDecorationLine: 'underline',
       marginHorizontal: 5,
     },
     alignEclipse: {
@@ -286,6 +288,15 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       flexWrap: 'wrap',
       marginTop: 80,
+      marginBottom: 10,
+    },
+    alignEclipseNoGoal: {
+      position: 'absolute',
+      bottom: -260,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      flexWrap: 'wrap',
     },
     greyElipses: {
       width: 10,
@@ -300,6 +311,11 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         backgroundColor: 'black',
         marginHorizontal: 5,
-    }
+    },
+    addGoalTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
     })
 export default styles;

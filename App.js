@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 // import Drink from './components/Drinks.js';
 // import { StatusBar } from 'expo-status-bar';
-// import * as SQLite from 'expo-sqlite';
+import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeScreen from './screens/Home';
 import AboutScreen from './screens/About';
@@ -31,7 +31,6 @@ export default function App() {
   const [sugarGoal, setSugarGoal] = useState(1);
   const [caffeineGoal, setCaffeineGoal] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
     

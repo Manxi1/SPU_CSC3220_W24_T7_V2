@@ -2,7 +2,9 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Alert, Animated, Image } from 'react-native';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Modal, PanResponder} from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { useRoute } from '@react-navigation/native';
 import { TabView, SceneMap } from 'react-native-tab-view';
+import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles.js';
 import AppContext from '../AppContextAPI'; 
@@ -18,6 +20,7 @@ export default function HomeScreen({ navigation }) {
   const [isAddMode, setIsAddMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
+  const [isUpdateGoalPopup, setUpdateGoalPopup] = useState(false);
   const [waterView, setWaterView] = useState(false);
   const [calorieView, setCalorieView] = useState(false);
   const [sugarView, setSugarView] = useState(false);
@@ -34,6 +37,46 @@ export default function HomeScreen({ navigation }) {
 
     return () => clearInterval(interval);
   }, []);
+
+  // useEffect(() => {
+  //   const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
+
+  //   console.log('db', db);
+
+  //   db.transaction(tx => {
+  //     tx.executeSql(
+  //       'SELECT TotalWaterIntake, TotalVolume, TotalCalories, TotalSugar, TotalCaffeine FROM Goal',
+  //       [],
+  //       (_, { rows }) => {
+  //         console.log(rows._array); // Log the entire result set
+  //         // Assuming rows._array is an array containing the result of the SQL query
+  //         if (rows._array.length > 0) {
+  //           const updatedTotalVolume = parseInt(rows._array[0].TotalVolume);
+  //           const updatedTotalWaterIntake = parseInt(rows._array[0].TotalWaterIntake);
+  //           const updatedTotalCalories = parseInt(rows._array[0].TotalCalories);
+  //           const updatedTotalSugar = parseInt(rows._array[0].TotalSugar);
+  //           const updatedTotalCaffeine = parseInt(rows._array[0].TotalCaffeine);
+  //           setTotalVolume(updatedTotalVolume); // Call setTotalVolume with the retrieved value
+  //           setTotalWaterIntake(updatedTotalWaterIntake);
+  //           setTotalCalories(updatedTotalCalories);
+  //           setTotalSugar(updatedTotalSugar);
+  //           setTotalCaffeine(updatedTotalCaffeine);
+  //           console.log('Total Volume:', updatedTotalVolume); // Log the retrieved value
+  //           console.log('Total Water Intake:', updatedTotalWaterIntake);
+  //           console.log('Total Calories:', updatedTotalCalories);
+  //           console.log('Total Sugar:', updatedTotalSugar);
+  //           console.log('Total Caffeine:', updatedTotalCaffeine);
+  //         } else {
+  //           // Handle case when no rows are returned
+  //           console.log('No rows returned from database');
+  //         }
+  //       },
+  //       (_, error) => {
+  //         console.log('1. Error fetching data from database: ', error);
+  //       }
+  //     );
+  //   });
+  // }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -78,8 +121,8 @@ export default function HomeScreen({ navigation }) {
     setCount(0);
   };
   
-  const toggleTotalPopup = () => {
-    setIsTotalPopVisible(!isTotalPopVisible);
+  const toggleUpdateGoal = () => {
+    setUpdateGoalPopup(!isUpdateGoalPopup);
   };
 
   const toggleMenu = () => {
@@ -122,7 +165,7 @@ export default function HomeScreen({ navigation }) {
 
   const handleAddTask = () => {
     Keyboard.dismiss();
-   setIsAddMode(false);
+    setIsAddMode(false);
    
     const handleBackButton = () => {
       setIsMenuOpen(false); // Close the menu
@@ -131,14 +174,14 @@ export default function HomeScreen({ navigation }) {
     // Insert the new drink into the database
     // db.transaction(tx => {
     //   tx.executeSql(
-    //     'INSERT INTO Drink (Content, Volume , Notes) VALUES (?, ? , ?)',
-    //     [drinkName, parseInt(drinkVolume), drinknotes],
+    //     'UPDATE Goal SET WaterIntake = ?, CalorieGoal = ?, SugarGoal = ?, CaffeineGoal = ?',
+    //     [waterIntakeGoal, calorieGoal, sugarGoal, caffeineGoal],
     //     (_, { insertId }) => {
-    //       console.log('Added to database with ID: ', insertId);
-    //       fetchDrinkTracker(); // Fetch updated DrinkTracker after adding
+    //       console.log('Updated Goal table:' + insertId);
+    //       fetchGoal(); // Fetch updated DrinkTracker after adding
     //     },
     //     (_, error) => {
-    //       console.log('2. Error adding to database: ', error);
+    //       console.log('3. Error adding to database: ', error);
     //     }
     //   );
     // });
@@ -161,14 +204,14 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
 
-          <View>
+          {/* <View>
             <Text>{currentTime.format('HH:mm:ss')}</Text>
             <Text>{totalCalories}</Text>
             <Text>{waterIntakeGoal}</Text>
             <Text>{calorieGoal}</Text>
             <Text>{sugarGoal}</Text>
             <Text>{caffeineGoal}</Text>
-          </View>
+          </View> */}
 
           <View style={styles.todaysGoalContainer}>
             <SwipeGesture
@@ -183,30 +226,42 @@ export default function HomeScreen({ navigation }) {
                   <>
                     <Text style={styles.goalsTitle}>Water Intake Goal</Text>
                     {waterIntakeGoal === 1 ? (
+                      <>
                         <Text>Input water intake goal</Text>
+                        <View style={styles.alignEclipseNoGoal}>
+                          <View style={styles.blackElipses} />
+                          <View style={styles.greyElipses} />
+                          <View style={styles.greyElipses} />
+                          <View style={styles.greyElipses} />
+                        </View>
+                      </>
                       ) : (
-                        <AnimatedCircularProgress
-                          size={150} // size of the progress bar
-                          width={13} // width of the progress ring
-                          fill={waterProgress ? (waterProgress/waterIntakeGoal)*100 : 0.01} // percentage of the progress
-                          tintColor="#00FF00" // color of the progress bar
-                          backgroundColor="#D3D3D3" // color of the remaining progress
-                          rotation={0} // start position of the progress bar
-                          style={{ bottom: -50 }}
-                          children={() => 
-                            <View>
-                              <Text>{Math.round((waterProgress/waterIntakeGoal)*100)}%</Text>
-                              <Text>{Math.round(100 - (waterProgress/waterIntakeGoal)*100)}% left</Text>
-                            </View>
-                          }
-                        />
+                        <>
+                          <Text>Total: {totalWaterIntake} (ml)</Text>
+                          <Text>Goal: {waterIntakeGoal} (ml)</Text>
+                          <AnimatedCircularProgress
+                            size={150} // size of the progress bar
+                            width={13} // width of the progress ring
+                            fill={totalWaterIntake ? (totalWaterIntake/waterIntakeGoal)*100 : 0.01} // percentage of the progress
+                            tintColor="#00FF00" // color of the progress bar
+                            backgroundColor="#D3D3D3" // color of the remaining progress
+                            rotation={0} // start position of the progress bar
+                            style={{ bottom: -40, position: 'relative'}}
+                            children={() => 
+                              <View>
+                                <Text>{Math.round((totalWaterIntake/waterIntakeGoal)*100)}%</Text>
+                                {/* <Text>{Math.round(100 - (waterProgress/waterIntakeGoal)*100)}% left</Text> */}
+                              </View>
+                            }
+                          />
+                          <View style={styles.alignEclipse}>
+                            <View style={styles.blackElipses} />
+                            <View style={styles.greyElipses} />
+                            <View style={styles.greyElipses} />
+                            <View style={styles.greyElipses} />
+                          </View>
+                        </>
                       )}
-                    <View style={styles.alignEclipse}>
-                      <View style={styles.blackElipses} />
-                      <View style={styles.greyElipses} />
-                      <View style={styles.greyElipses} />
-                      <View style={styles.greyElipses} />
-                    </View>
                   </>
                 )}
                 
@@ -214,30 +269,42 @@ export default function HomeScreen({ navigation }) {
                   <>
                     <Text style={styles.goalsTitle}>Calorie Intake Goal</Text>
                     {calorieGoal === 1 ? (
+                      <>
                         <Text>Input calorie goal</Text>
+                        <View style={styles.alignEclipseNoGoal}>
+                          <View style={styles.greyElipses} />
+                          <View style={styles.blackElipses} />
+                          <View style={styles.greyElipses} />
+                          <View style={styles.greyElipses} />
+                        </View>
+                      </>
                       ) : (
-                      <AnimatedCircularProgress
-                        size={150} // size of the progress bar
-                        width={13} // width of the progress ring
-                        fill={totalCalories ? (totalCalories/calorieGoal)*100 : 0.01} // percentage of the progress
-                        tintColor="#00FF00" // color of the progress bar
-                        backgroundColor="#D3D3D3" // color of the remaining progress
-                        rotation={0} // start position of the progress bar
-                        style={{ bottom: -50 }}
-                        children={() => 
-                          <View>
-                            <Text>{Math.round((totalCalories/calorieGoal)*100)}%</Text>
-                            <Text>{Math.round(100 - (totalCalories/calorieGoal)*100)}% left</Text>
+                        <>
+                          <Text>Total: {totalCalories} (kcal)</Text>
+                          <Text>Calorie Goal: {calorieGoal} (kcal)</Text>
+                          <AnimatedCircularProgress
+                            size={150} // size of the progress bar
+                            width={13} // width of the progress ring
+                            fill={totalCalories ? (totalCalories/calorieGoal)*100 : 0.01} // percentage of the progress
+                            tintColor="#00FF00" // color of the progress bar
+                            backgroundColor="#D3D3D3" // color of the remaining progress
+                            rotation={0} // start position of the progress bar
+                            style={{ bottom: -40, position: 'relative'}}
+                            children={() => 
+                              <View>
+                                <Text>{Math.round((totalCalories/calorieGoal)*100)}%</Text>
+                                <Text>{Math.round(100 - (totalCalories/calorieGoal)*100)}% left</Text>
+                              </View>
+                            }
+                          />
+                          <View style={styles.alignEclipse}>
+                            <View style={styles.greyElipses} />
+                            <View style={styles.blackElipses} />
+                            <View style={styles.greyElipses} />
+                            <View style={styles.greyElipses} />
                           </View>
-                        }
-                      />
+                        </>
                       )}
-                    <View style={styles.alignEclipse}>
-                      <View style={styles.greyElipses} />
-                      <View style={styles.blackElipses} />
-                      <View style={styles.greyElipses} />
-                      <View style={styles.greyElipses} />
-                    </View>
                   </>
                 )}
 
@@ -245,30 +312,42 @@ export default function HomeScreen({ navigation }) {
                   <>
                     <Text style={styles.goalsTitle}>Sugar Intake Goal</Text>
                     {sugarGoal === 1 ? (
+                      <>
                         <Text>Input sugar goal</Text>
+                        <View style={styles.alignEclipseNoGoal}>
+                          <View style={styles.greyElipses} />
+                          <View style={styles.greyElipses} />
+                          <View style={styles.blackElipses} />
+                          <View style={styles.greyElipses} />
+                        </View>
+                      </>
                       ) : (
-                      <AnimatedCircularProgress
-                        size={150} // size of the progress bar
-                        width={13} // width of the progress ring
-                        fill={totalSugar ? (totalSugar/sugarGoal)*100 : 0.01} // percentage of the progress
-                        tintColor="#00FF00" // color of the progress bar
-                        backgroundColor="#D3D3D3" // color of the remaining progress
-                        rotation={0} // start position of the progress bar
-                        style={{ bottom: -50 }}
-                        children={() => 
-                          <View>
-                            <Text>{Math.round((totalSugar/sugarGoal)*100)}%</Text>
-                            <Text>{Math.round(100 - (totalSugar/sugarGoal)*100)}% left</Text>
+                        <>
+                          <Text>Total: {totalSugar} (g)</Text>
+                          <Text>Sugar Goal: {sugarGoal} (g)</Text>
+                          <AnimatedCircularProgress
+                            size={150} // size of the progress bar
+                            width={13} // width of the progress ring
+                            fill={totalSugar ? (totalSugar/sugarGoal)*100 : 0.01} // percentage of the progress
+                            tintColor="#00FF00" // color of the progress bar
+                            backgroundColor="#D3D3D3" // color of the remaining progress
+                            rotation={0} // start position of the progress bar
+                            style={{ bottom: -40, position: 'relative'}}
+                            children={() => 
+                              <View>
+                                <Text>{Math.round((totalSugar/sugarGoal)*100)}%</Text>
+                                <Text>{Math.round(100 - (totalSugar/sugarGoal)*100)}% left</Text>
+                              </View>
+                            }
+                          />
+                          <View style={styles.alignEclipse}>
+                            <View style={styles.greyElipses} />
+                            <View style={styles.greyElipses} />
+                            <View style={styles.blackElipses} />
+                            <View style={styles.greyElipses} />
                           </View>
-                        }
-                      />
+                        </>
                       )}
-                    <View style={styles.alignEclipse}>
-                      <View style={styles.greyElipses} />
-                      <View style={styles.greyElipses} />
-                      <View style={styles.blackElipses} />
-                      <View style={styles.greyElipses} />
-                    </View>
                   </>
                 )}
 
@@ -276,30 +355,42 @@ export default function HomeScreen({ navigation }) {
                   <>
                     <Text style={styles.goalsTitle}>Caffeine Intake Goal</Text>
                     {caffeineGoal === 1 ? (
+                      <>
                         <Text>Input caffeine goal</Text>
+                        <View style={styles.alignEclipseNoGoal}>
+                          <View style={styles.greyElipses} />
+                          <View style={styles.greyElipses} />
+                          <View style={styles.greyElipses} />
+                          <View style={styles.blackElipses} />
+                        </View>
+                      </>
                       ) : (
-                      <AnimatedCircularProgress
-                        size={150} // size of the progress bar
-                        width={13} // width of the progress ring
-                        fill={TotalCaffeine ? (TotalCaffeine/caffeineGoal)*100 : 0.01} // percentage of the progress
-                        tintColor="#00FF00" // color of the progress bar
-                        backgroundColor="#D3D3D3" // color of the remaining progress
-                        rotation={0} // start position of the progress bar
-                        style={{ bottom: -50 }}
-                        children={() => 
-                          <View>
-                            <Text>{Math.round((TotalCaffeine/caffeineGoal)*100)}%</Text>
-                            <Text>{Math.round(100 - (TotalCaffeine/caffeineGoal)*100)}% left</Text>
+                        <>
+                          <Text>Total: {TotalCaffeine} (mg)</Text>
+                          <Text>Caffeine Goal: {caffeineGoal} (mg)</Text>
+                          <AnimatedCircularProgress
+                            size={150} // size of the progress bar
+                            width={13} // width of the progress ring
+                            fill={TotalCaffeine ? (TotalCaffeine/caffeineGoal)*100 : 0.01} // percentage of the progress
+                            tintColor="#00FF00" // color of the progress bar
+                            backgroundColor="#D3D3D3" // color of the remaining progress
+                            rotation={0} // start position of the progress bar
+                            style={{ bottom: -40, position: 'relative'}}
+                            children={() => 
+                              <View>
+                                <Text>{Math.round((TotalCaffeine/caffeineGoal)*100)}%</Text>
+                                <Text>{Math.round(100 - (TotalCaffeine/caffeineGoal)*100)}% left</Text>
+                              </View>
+                            }
+                          />
+                          <View style={styles.alignEclipse}>
+                            <View style={styles.greyElipses} />
+                            <View style={styles.greyElipses} />
+                            <View style={styles.greyElipses} />
+                            <View style={styles.blackElipses} />
                           </View>
-                        }
-                      />
+                        </>
                       )}
-                    <View style={styles.alignEclipse}>
-                      <View style={styles.greyElipses} />
-                      <View style={styles.greyElipses} />
-                      <View style={styles.greyElipses} />
-                      <View style={styles.blackElipses} />
-                    </View>
                   </>
                 )}
               </View>
@@ -311,7 +402,7 @@ export default function HomeScreen({ navigation }) {
             <TouchableOpacity style={styles.roundButton} onPress={() => setIsAddMode(true)}>
               <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
-            <Text style={styles.volumeFooter}>Click to add a goal</Text>
+            <Text style={styles.volumeFooter}>Click to add goals</Text>
           </View>
           <Modal 
           visible={isAddMode} 
@@ -321,34 +412,35 @@ export default function HomeScreen({ navigation }) {
           >
             <View style={styles.modalContainer}>
               <View style = {styles.modalView}>
+                <Text style={styles.addGoalTitle}>Add or update goals</Text>
                 <View style = {styles.textInputView}>
                   <TextInput
                   style={styles.input}
                   placeholder={'Water Goal (ml)'}
                   keyboardType={'numeric'}
                   number={waterIntakeGoal}
-                  onChangeText={(input)=> inputWaterGoal(input)}
+                  onChangeText={(input)=> inputWaterGoal(parseInt(input))}
                   />
                   <TextInput
                   style={styles.input}
-                  placeholder={'Calorie Goal'}
+                  placeholder={'Calorie Goal (kcal)'}
                   keyboardType={'numeric'}
                   number={calorieGoal}
-                  onChangeText={(text)=> setCalorieGoal(text)}
+                  onChangeText={(text)=> setCalorieGoal(parseInt(text))}
                   />
                   <TextInput
                   style={styles.input}
-                  placeholder={'Sugar Goal'}
+                  placeholder={'Sugar Goal (g)'}
                   keyboardType={'numeric'}
                   number={sugarGoal}
-                  onChangeText={(text)=> setSugarGoal(text)}
+                  onChangeText={(text)=> setSugarGoal(parseInt(text))}
                   />
                   <TextInput
                   style={styles.input}
-                  placeholder={'Caffeine Goal'}
+                  placeholder={'Caffeine Goal (mg)'}
                   keyboardType={'numeric'}
                   number={caffeineGoal}
-                  onChangeText={(text)=> setCaffeineGoal(text)}
+                  onChangeText={(text)=> setCaffeineGoal(parseInt(text))}
                   />
                 </View>
 
