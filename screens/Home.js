@@ -436,7 +436,7 @@ export default function HomeScreen({ navigation }) {
     </TouchableOpacity>
   );
   const getDayOfWeek = (dateString) => {
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const date = new Date(dateString);
    
     return days[date.getDay()];
