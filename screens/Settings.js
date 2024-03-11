@@ -15,8 +15,9 @@ export default function SettingsScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.Title}>Drink List</Text>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.goBackButton}>
-        <Text>Go Back</Text>
+        <Text style={styles.goBackText}>Go Back</Text>
       </TouchableOpacity>
 
       <TextInput
@@ -51,9 +52,21 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   goBackButton: {
+    marginTop: 50,
     position: 'absolute',
-    top: 40,
-    left: 10,
+    padding: 10,
+    backgroundColor: '#BF40BF',
+    flexDirection: 'row',
+    bottom: 800,
+    width: 80,
+    borderRadius: 20,
+    borderTopLeftRadius: 0,
+    borderBottomLeftRadius: 0,
+    left: 1,
+ },
+ goBackText: {
+    color: '#FFFFFF',
+    textAlign: 'center',
   },
   searchInput: {
     paddingHorizontal: 10,
@@ -62,11 +75,25 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    bottom:-75
+    bottom:-70,
+    width: 370,
+    left: 10,
+    height: 50,
+    borderRadius: 30,
+    
   },
   flatList: {
     flex: 1,
     marginTop: 10,
-    bottom: -60
+    bottom: -60,
+    left: 10,
   },
+  Title:{
+    fontFamily: 'Roboto',
+    fontSize:30,
+    fontWeight:'bold',
+    bottom: -50,
+    textDecorationLine: 'underline',
+    alignSelf: 'center',
+  }
 });

@@ -488,13 +488,13 @@ export default function HomeScreen({ navigation }) {
                 </TouchableOpacity>
                 <View style={styles.MenuItemes}>
                   
-                  <TouchableOpacity onPress={toggleMenu} style={[styles.MenuItemes, { marginBottom: 1 }]}>
+                  <TouchableOpacity onPress={toggleMenu} style={[styles.MenuItemes, { marginBottom: -30 }]}>
                     <Text style={styles.MenuItemestext}>Home</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
-                    <Text style={styles.MenuItemestext}>Settings</Text>
+                  <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={[styles.MenuItemes, { flex: 2 ,marginBottom:-30}]}>
+                    <Text style={styles.MenuItemestext}>Drink list</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate("About")} style={[styles.MenuItemes, { flex: 18, marginTop:2}]}>
+                  <TouchableOpacity onPress={() => navigation.navigate("About")} style={[styles.MenuItemes, { flex: 18, marginTop:0}]}>
                     <Text style={styles.MenuItemestext}>About</Text>
                   </TouchableOpacity>
 
