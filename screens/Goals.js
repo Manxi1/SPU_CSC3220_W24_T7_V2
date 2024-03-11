@@ -135,7 +135,11 @@ export default function HomeScreen({ navigation }) {
               <Text style={{textAlign: 'center', fontSize: 20, marginHorizontal: 5, padding: 5 }}>:</Text>
               <Text style={styles.timeText}>{60 - currentTime.format('ss')}</Text>
             </View>
-            <Text style={styles.volumeFooter}>Time To Complete Goal</Text>
+            <View style={{ marginTop: 5}}>
+              {/* <Text style={styles.volumeFooter}>Hours : Minutes : Seconds</Text> */}
+              <Text style={styles.volumeFooter}>Time To Complete Goal</Text>
+            </View>
+            
           </View>
 
           <View style={styles.todaysGoalContainer}>
@@ -323,7 +327,9 @@ export default function HomeScreen({ navigation }) {
             <TouchableOpacity style={styles.roundButton} onPress={() => setIsAddMode(true)}>
               <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
-            <Text style={styles.volumeFooter}>Click to add goals</Text>
+            <View style={{marginTop: 5}}>
+              <Text style={styles.volumeFooter}>Click to add goals</Text>
+            </View>
           </View>
           <Modal 
           visible={isAddMode} 
