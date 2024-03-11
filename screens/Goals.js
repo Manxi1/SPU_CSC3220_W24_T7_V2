@@ -135,7 +135,7 @@ export default function HomeScreen({ navigation }) {
               <Text style={{textAlign: 'center', fontSize: 20, marginHorizontal: 5, padding: 5 }}>:</Text>
               <Text style={styles.timeText}>{60 - currentTime.format('ss')}</Text>
             </View>
-            <Text style={{ textAlign: 'center' }}>Time To Complete Goal</Text>
+            <Text style={styles.volumeFooter}>Time To Complete Goal</Text>
           </View>
 
           <View style={styles.todaysGoalContainer}>
