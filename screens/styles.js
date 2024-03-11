@@ -317,5 +317,20 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       textAlign: 'center',
     },
+    timeContainer: {
+      // textAlign: 'center',
+      padding: 10,
+      borderRadius: 20,
+      backgroundColor: '#ff5722',
+      width: '70%',
+    },
+    timeText: {
+      textAlign: 'center',
+      fontSize: 20,
+      backgroundColor: 'lightgrey',
+      padding: 5,
+      borderRadius: 20,
+      marginHorizontal: 5,
+    },
     })
 export default styles;
