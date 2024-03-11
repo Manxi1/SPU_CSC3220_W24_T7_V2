@@ -323,5 +323,21 @@ const styles = StyleSheet.create({
       fontWeight: 'bold',
       textAlign: 'center',
     },
+    timeContainer: {
+      // textAlign: 'center',
+      alignItems: 'center',
+      padding: 10,
+      borderRadius: 40,
+      backgroundColor: '#E0B0FF',
+      width: '70%',
+    },
+    timeText: {
+      textAlign: 'center',
+      fontSize: 20,
+      backgroundColor: '#BF40BF',
+      padding: 5,
+      borderRadius: 20,
+      marginHorizontal: 5,
+    },
     })
 export default styles;

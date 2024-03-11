@@ -10,10 +10,14 @@ import styles from './styles.js';
 import AppContext from '../AppContextAPI'; 
 import SwipeGesture from 'react-native-swipe-gestures';
 import moment from 'moment';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 export default function HomeScreen({ navigation }) {
-  const { totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
+  const { fetchGoalsTable, fetchedWaterGoal,
+    fetchedCalorieGoal,
+    fetchedSugarGoal,
+    fetchedCaffeieneGoal, db, updateGoalsTable, totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
     totalSugar, setTotalSugar, totalWaterIntake, setTotalWaterIntake,
     TotalCaffeine, setTotalCaffeine, waterIntakeGoal, setWaterIntakeGoal, calorieGoal, 
     setCalorieGoal, sugarGoal, setSugarGoal, caffeineGoal, setCaffeineGoal } = useContext(AppContext);
@@ -28,7 +32,7 @@ export default function HomeScreen({ navigation }) {
   const [swipeCount, setSwipeCount] = useState(0);
   const [currentTime, setCurrentTime] = useState(moment());
 
-  const [waterProgress, setWaterProgress] = useState(0); //temporary value for the progress bar
+  const [counter, setCounter] = useState(0); //temporary value for the progress bar
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,54 +42,12 @@ export default function HomeScreen({ navigation }) {
     return () => clearInterval(interval);
   }, []);
 
-  // useEffect(() => {
-  //   const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
-
-  //   console.log('db', db);
-
-  //   db.transaction(tx => {
-  //     tx.executeSql(
-  //       'SELECT TotalWaterIntake, TotalVolume, TotalCalories, TotalSugar, TotalCaffeine FROM Goal',
-  //       [],
-  //       (_, { rows }) => {
-  //         console.log(rows._array); // Log the entire result set
-  //         // Assuming rows._array is an array containing the result of the SQL query
-  //         if (rows._array.length > 0) {
-  //           const updatedTotalVolume = parseInt(rows._array[0].TotalVolume);
-  //           const updatedTotalWaterIntake = parseInt(rows._array[0].TotalWaterIntake);
-  //           const updatedTotalCalories = parseInt(rows._array[0].TotalCalories);
-  //           const updatedTotalSugar = parseInt(rows._array[0].TotalSugar);
-  //           const updatedTotalCaffeine = parseInt(rows._array[0].TotalCaffeine);
-  //           setTotalVolume(updatedTotalVolume); // Call setTotalVolume with the retrieved value
-  //           setTotalWaterIntake(updatedTotalWaterIntake);
-  //           setTotalCalories(updatedTotalCalories);
-  //           setTotalSugar(updatedTotalSugar);
-  //           setTotalCaffeine(updatedTotalCaffeine);
-  //           console.log('Total Volume:', updatedTotalVolume); // Log the retrieved value
-  //           console.log('Total Water Intake:', updatedTotalWaterIntake);
-  //           console.log('Total Calories:', updatedTotalCalories);
-  //           console.log('Total Sugar:', updatedTotalSugar);
-  //           console.log('Total Caffeine:', updatedTotalCaffeine);
-  //         } else {
-  //           // Handle case when no rows are returned
-  //           console.log('No rows returned from database');
-  //         }
-  //       },
-  //       (_, error) => {
-  //         console.log('1. Error fetching data from database: ', error);
-  //       }
-  //     );
-  //   });
-  // }, []);
-
   useEffect(() => {
     const interval = setInterval(() => {
       const currentTime = moment();
-      if (currentTime.format('HH:mm:ss') === '22:34:00') {
-        setCaffeineGoal(1);
-        setCalorieGoal(1);
-        setSugarGoal(1);
-        setWaterIntakeGoal(1);
+      if (currentTime.format('HH:mm:ss') === '17:20:00') {
+        updateGoalsTable(1, 1, 1, 1);
+        setCounter(counter + 1);
       }
     }, 1000); // Check every second
 
@@ -93,6 +55,13 @@ export default function HomeScreen({ navigation }) {
 
     return () => clearInterval(interval);
   }, []); // Empty dependency array means it runs once on component mount
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Fetch the data and update the state
+      fetchGoalsTable();
+    }, [counter])
+  );
 
 
   const onSwipeLeft = () => {
@@ -129,40 +98,6 @@ export default function HomeScreen({ navigation }) {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
   };
 
-
-  const fetchGoal = () => {
-    db.transaction(tx => {
-      tx.executeSql(
-        'SELECT TotalVolume, TotalCalories, TotalSugar, TotalCaffeine FROM Goal',
-        [],
-        (_, { rows }) => {
-          console.log(rows._array); // Log the entire result set
-          // Assuming rows._array is an array containing the result of the SQL query
-          if (rows._array.length > 0) {
-            const updatedTotalVolume = parseInt(rows._array[0].TotalVolume);
-            const updatedTotalCalories = parseInt(rows._array[0].TotalCalories);
-            const updatedTotalSugar = parseInt(rows._array[0].TotalSugar);
-            const updatedTotalCaffeine = parseInt(rows._array[0].TotalCaffeine);
-            setTotalVolume(updatedTotalVolume); // Call setTotalVolume with the retrieved value
-            setTotalCalories(updatedTotalCalories);
-            setTotalSugar(updatedTotalSugar);
-            setTotalCaffeine(updatedTotalCaffeine);
-            console.log('Total Volume:', updatedTotalVolume); // Log the retrieved value
-            console.log('Total Calories:', updatedTotalCalories);
-            console.log('Total Sugar:', updatedTotalSugar);
-            console.log('Total Caffeine:', updatedTotalCaffeine);
-          } else {
-            // Handle case when no rows are returned
-            console.log('No rows returned from database');
-          }
-        },
-        (_, error) => {
-          console.log('1. Error fetching data from database: ', error);
-        }
-      );
-    });
-  };
-
   const handleAddTask = () => {
     Keyboard.dismiss();
     setIsAddMode(false);
@@ -170,21 +105,9 @@ export default function HomeScreen({ navigation }) {
     const handleBackButton = () => {
       setIsMenuOpen(false); // Close the menu
     };
+    console.log('Water Goal Input:', waterIntakeGoal);
+    updateGoalsTable(waterIntakeGoal, calorieGoal, sugarGoal, caffeineGoal);
   
-    // Insert the new drink into the database
-    // db.transaction(tx => {
-    //   tx.executeSql(
-    //     'UPDATE Goal SET WaterIntake = ?, CalorieGoal = ?, SugarGoal = ?, CaffeineGoal = ?',
-    //     [waterIntakeGoal, calorieGoal, sugarGoal, caffeineGoal],
-    //     (_, { insertId }) => {
-    //       console.log('Updated Goal table:' + insertId);
-    //       fetchGoal(); // Fetch updated DrinkTracker after adding
-    //     },
-    //     (_, error) => {
-    //       console.log('3. Error adding to database: ', error);
-    //     }
-    //   );
-    // });
   };
 
   const inputWaterGoal = (input) => {
@@ -204,14 +127,16 @@ export default function HomeScreen({ navigation }) {
             </View>
           </View>
 
-          {/* <View>
-            <Text>{currentTime.format('HH:mm:ss')}</Text>
-            <Text>{totalCalories}</Text>
-            <Text>{waterIntakeGoal}</Text>
-            <Text>{calorieGoal}</Text>
-            <Text>{sugarGoal}</Text>
-            <Text>{caffeineGoal}</Text>
-          </View> */}
+          <View style={styles.timeContainer}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+              <Text style={styles.timeText}>{24 - currentTime.format('HH')}</Text>
+              <Text style={{textAlign: 'center', fontSize: 20, marginHorizontal: 5, padding: 5 }}>:</Text>
+              <Text style={styles.timeText}>{60 - currentTime.format('mm')}</Text>
+              <Text style={{textAlign: 'center', fontSize: 20, marginHorizontal: 5, padding: 5 }}>:</Text>
+              <Text style={styles.timeText}>{60 - currentTime.format('ss')}</Text>
+            </View>
+            <Text style={styles.volumeFooter}>Time To Complete Goal</Text>
+          </View>
 
           <View style={styles.todaysGoalContainer}>
             <SwipeGesture
@@ -249,8 +174,7 @@ export default function HomeScreen({ navigation }) {
                             style={{ bottom: -40, position: 'relative'}}
                             children={() => 
                               <View>
-                                <Text>{Math.round((totalWaterIntake/waterIntakeGoal)*100)}%</Text>
-                                {/* <Text>{Math.round(100 - (waterProgress/waterIntakeGoal)*100)}% left</Text> */}
+                                <Text>{Math.min(100, Math.round((totalWaterIntake / waterIntakeGoal) * 100))}%</Text>
                               </View>
                             }
                           />
@@ -292,8 +216,7 @@ export default function HomeScreen({ navigation }) {
                             style={{ bottom: -40, position: 'relative'}}
                             children={() => 
                               <View>
-                                <Text>{Math.round((totalCalories/calorieGoal)*100)}%</Text>
-                                <Text>{Math.round(100 - (totalCalories/calorieGoal)*100)}% left</Text>
+                                <Text>{Math.min(100, Math.round((totalCalories / calorieGoal) * 100))}%</Text>
                               </View>
                             }
                           />
@@ -335,8 +258,7 @@ export default function HomeScreen({ navigation }) {
                             style={{ bottom: -40, position: 'relative'}}
                             children={() => 
                               <View>
-                                <Text>{Math.round((totalSugar/sugarGoal)*100)}%</Text>
-                                <Text>{Math.round(100 - (totalSugar/sugarGoal)*100)}% left</Text>
+                                <Text>{Math.min(100, Math.round((totalSugar / sugarGoal) * 100))}%</Text>
                               </View>
                             }
                           />
@@ -378,8 +300,7 @@ export default function HomeScreen({ navigation }) {
                             style={{ bottom: -40, position: 'relative'}}
                             children={() => 
                               <View>
-                                <Text>{Math.round((TotalCaffeine/caffeineGoal)*100)}%</Text>
-                                <Text>{Math.round(100 - (TotalCaffeine/caffeineGoal)*100)}% left</Text>
+                                <Text>{Math.min(100, Math.round((TotalCaffeine / caffeineGoal) * 100))}%</Text>
                               </View>
                             }
                           />
