@@ -429,6 +429,7 @@ export default function HomeScreen({ navigation }) {
     }
   };
   
+  
   const renderSuggestionItem = ({ drinkname }) => (
     <TouchableOpacity onPress={() => handleSuggestionSelect(drinkname)}>
       <Text style={styles.itemText}>{drinkname}</Text>
@@ -437,9 +438,7 @@ export default function HomeScreen({ navigation }) {
   const getDayOfWeek = (dateString) => {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const date = new Date(dateString);
-    console.log('Date String:', dateString); // Debugging line
-    console.log('Date Object:', date); // Debugging line
-    console.log('Day of Week:', days[date.getDay()]); // Debugging line
+   
     return days[date.getDay()];
   };
   
@@ -496,6 +495,11 @@ export default function HomeScreen({ navigation }) {
   // Group the DrinkTracker items by the day of the week using the current date
   const groupedItems = groupByDayOfWeek(DrinkTracker, currentDate);
   // saveGroupedItems(groupedItems);
+  const [isPressed, setIsPressed] = useState(false);
+  const [isSettingsPressed, setIsSettingsPressed] = useState(false);
+  const [isAboutPressed, setIsAboutPressed] = useState(false);
+  
+      
     
       return (
           <View style={styles.container}>
@@ -658,14 +662,30 @@ export default function HomeScreen({ navigation }) {
                     </TouchableOpacity>
                     <View style={styles.MenuItemes}>
                       
-                      <TouchableOpacity onPress={toggleMenu} style={[styles.MenuItemes, { marginBottom: 1 }]}>
-                        <Text style={styles.MenuItemestext}>Home</Text>
+                      <TouchableOpacity
+                      onPressIn={() => setIsPressed(true)}
+                      onPressOut={() => setIsPressed(false)}
+                      onPress={toggleMenu}
+                      style={[styles.MenuItemes, { marginBottom: -30 }]}
+                      >
+                        <Text style={[styles.MenuItemestext, isPressed && styles.underline]}>Home</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => navigation.navigate("Settings")} style={[styles.MenuItemes, { flex: 2 ,marginBottom:1}]}>
-                        <Text style={styles.MenuItemestext}>Settings</Text>
+                      <TouchableOpacity
+                        onPressIn={() => setIsPressed(true)}
+                        onPressOut={() => setIsPressed(false)}
+                        onPress={() => navigation.navigate("Settings")}
+                        style={[styles.MenuItemes, { flex: 2 ,marginBottom:-30}]}
+                      >
+                        <Text style={[styles.MenuItemestext, isSettingsPressed && styles.underline]}>Drink List</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => navigation.navigate("About")} style={[styles.MenuItemes, { flex: 18, marginTop:2}]}>
-                        <Text style={styles.MenuItemestext}>About</Text>
+
+                      <TouchableOpacity
+                        onPressIn={() => setIsPressed(true)}
+                        onPressOut={() => setIsPressed(false)}
+                        onPress={() => navigation.navigate("About")}
+                        style={[styles.MenuItemes, { flex: 18, marginTop:0}]}
+                      >
+                        <Text style={[styles.MenuItemestext, isAboutPressed && styles.underline]}>About</Text>
                       </TouchableOpacity>
 
                       </View>

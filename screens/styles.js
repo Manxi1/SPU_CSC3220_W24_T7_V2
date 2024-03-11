@@ -4,7 +4,7 @@ import Constants from 'expo-constants';
 const styles = StyleSheet.create({
     container: { // Wraps whole app
       flex: 1,
-      backgroundColor: '#fff', // White background
+      backgroundColor: '#FAF9F6', // White background
       alignItems: 'center', // Center items horizontally
       justifyContent: 'space-between', // Evenly space items vertically
       paddingTop: 50, // Add padding to the top of the app
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       padding: 10,
       borderRadius: 40,
-      backgroundColor: '#ff5722',
+      backgroundColor: '#BF40BF',
     },
     buttonText: { // + button text
       color: 'white',
@@ -35,12 +35,12 @@ const styles = StyleSheet.create({
     },
     menuButton: { // Menu button
       position: 'absolute',
-      top: 50, // Adjust this value to move the button up or down on the page
+      top: 55, // Adjust this value to move the button up or down on the page
       left: 20,
       zIndex:1, // Adjust this value to move the button left or right on the page
     },
     menuText: { // Text for the menu button
-      fontSize: 30,
+      fontSize: 35,
       color: '#000',
     },
     sectionTitle: { // Title of the app
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       padding: 5,
       borderRadius: 30,
-      backgroundColor: '#ff5722',
+      backgroundColor: '#BF40BF',
       marginBottom: 30,
       marginTop: 10,
       left: 0,
@@ -147,17 +147,21 @@ const styles = StyleSheet.create({
     },
     menuContent: {
       backgroundColor: 'lightgrey',
-      padding: 30,
+      padding: 10,
       borderTopRightRadius: 20,
       borderBottomRightRadius: 20,
-      width: '50%',
+      width: '41%',
       height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
     },
+     // ... other styles ...
+  underline: {
+    textDecorationLine: 'underline',
+  },
     backButton: {
       position: 'absolute',
-      top: 5,
+      top: 1,
       left: 5,
       padding: 10,
       borderRadius: 10,
@@ -167,13 +171,13 @@ const styles = StyleSheet.create({
     MenuItemes: {
   
        flex: 2,
-       right: 10,
-       top: 10,
+       right: 5,
+       top: 20,
       
     },
      MenuItemestext:{
       fontFamily: 'Roboto',
-      fontSize:26,
+      fontSize:21,
   
      },
      inputMessage: {
@@ -183,9 +187,9 @@ const styles = StyleSheet.create({
       borderRadius: 30,
       borderColor: '#C0C0C0',
       borderWidth: 2,
-      width: 350,
+      width: 400,
       marginBottom: 1,
-      marginTop: -10,
+      marginTop: -1,
     },
 
     totalVolumeButton: {
@@ -196,7 +200,7 @@ const styles = StyleSheet.create({
       padding: 10,
       borderRadius: 40,
       marginTop: 15,
-      backgroundColor: '#ff5722',
+      backgroundColor: '#E0B0FF',
     },
     volumeTitle: { // Title of the app
       fontSize: 20,
@@ -213,7 +217,7 @@ const styles = StyleSheet.create({
       backgroundColor: 'rgba(0,0,0.5,0.5)',
     },
     totalPopupView: {
-      backgroundColor: 'lightgrey',
+      backgroundColor: '#FAF9F6',
       padding: 20,
       borderRadius: 10,
       width: '90%',
@@ -228,6 +232,7 @@ const styles = StyleSheet.create({
       justifyContent: "center",
       paddingHorizontal: 15,
       minHeight: 100,
+      fontSize: 25,
     },
     totalPopupClose: {
       justifyContent: "center",
@@ -241,7 +246,8 @@ const styles = StyleSheet.create({
       padding: 10,
       borderRadius: 40,
       marginHorizontal: '38%',
-      backgroundColor: '#ff5722',
+      backgroundColor: '#C3B1E1',
+      bottom: -10,
     },
     todaysGoalContainer: {
       fontSize: 20,
