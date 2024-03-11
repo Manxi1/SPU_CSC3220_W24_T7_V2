@@ -571,6 +571,10 @@ export default function HomeScreen({ navigation }) {
                   <TouchableOpacity style={styles.roundButton} onPress={() => setIsAddMode(true)}>
                     <Text style={styles.buttonText}>+</Text>
                   </TouchableOpacity>
+                  <View style={{marginTop: 5}}>
+                    <Text style={styles.volumeFooter}>Click to add drinks</Text>
+                  </View>
+                  
                   
 
               </View>
