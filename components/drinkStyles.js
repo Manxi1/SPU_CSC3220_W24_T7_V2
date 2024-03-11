@@ -77,7 +77,7 @@ const drinkStyles = StyleSheet.create({
         backgroundColor: '#C3B1E1',
         marginTop: 10,
         marginBottom: 10,
-        bottom: -18,
+        bottom: -10
       },
   });
 

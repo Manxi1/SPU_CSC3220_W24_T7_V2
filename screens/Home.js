@@ -675,8 +675,8 @@ export default function HomeScreen({ navigation }) {
                         <Text style={[styles.MenuItemestext, isPressed && styles.underline]}>Home</Text>
                       </TouchableOpacity>
                       <TouchableOpacity
-                        onPressIn={() => setIsPressed(true)}
-                        onPressOut={() => setIsPressed(false)}
+                        onPressIn={() => setIsSettingsPressed(true)}
+                        onPressOut={() => setIsSettingsPressed(false)}
                         onPress={() => navigation.navigate("Settings")}
                         style={[styles.MenuItemes, { flex: 2 ,marginBottom:-30}]}
                       >
@@ -684,8 +684,8 @@ export default function HomeScreen({ navigation }) {
                       </TouchableOpacity>
 
                       <TouchableOpacity
-                        onPressIn={() => setIsPressed(true)}
-                        onPressOut={() => setIsPressed(false)}
+                        onPressIn={() => setIsAboutPressed(true)}
+                        onPressOut={() => setIsAboutPressed(false)}
                         onPress={() => navigation.navigate("About")}
                         style={[styles.MenuItemes, { flex: 18, marginTop:0}]}
                       >
