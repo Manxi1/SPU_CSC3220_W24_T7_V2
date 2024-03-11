@@ -35,12 +35,15 @@ export default function HomeScreen({ navigation }) {
   // const [totalCalories, setTotalCalories] = useState(0);
   // const [totalSugar, setTotalSugar] = useState(0);
   // const [TotalCaffeine, setTotalCaffeine] = useState(0);
-  const { totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
+  const { fetchGoalsTable, fetchedWaterGoal,
+    fetchedCalorieGoal,
+    fetchedSugarGoal,
+    fetchedCaffeieneGoal, db, updateGoalsTable, totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
     totalSugar, setTotalSugar, totalWaterIntake, setTotalWaterIntake,
     TotalCaffeine, setTotalCaffeine, waterIntakeGoal, setWaterIntakeGoal, calorieGoal, 
     setCalorieGoal, sugarGoal, setSugarGoal, caffeineGoal, setCaffeineGoal } = useContext(AppContext);
   // const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
-  const db = SQLite.openDatabase('./siplogV2db.db');
+  // const db = SQLite.openDatabase('./siplogV2db.db');
 
   useEffect(() => {
     // Create table if not exists
@@ -97,9 +100,9 @@ export default function HomeScreen({ navigation }) {
         tx.executeSql(
             `CREATE TABLE IF NOT EXISTS Tracker (
                 DrinkListId INTEGER PRIMARY KEY AUTOINCREMENT,
-                Message     TEXT,
-                Date        TEXT    NOT NULL,
-                Time        TEXT    NOT NULL,
+                TrackerDay TEXT NOT NULL,
+                TrackerItem TEXT NOT NULL,
+                TrackerCreatedAt TEXT NOT NULL,
                 GoalId      INTEGER REFERENCES Goal (GoalId)
             )`, [],
             () => {
@@ -142,7 +145,9 @@ export default function HomeScreen({ navigation }) {
 
         // db.transaction(tx => {
         //   tx.executeSql(
-        //       `ALTER TABLE Goal ADD COLUMN TotalVolume NUMERIC DEFAULT (0)`, [],
+        //       `ALTER TABLE Tracker ADD COLUMN TrackerDay TEXT NOT NULL,
+        //       TrackerItem TEXT NOT NULL,
+        //       TrackerCreatedAt TEXT NOT NULL,`, [],
         //       () => {
         //           console.log('NewColumn added to Drink table successfully');
         //       },
@@ -204,6 +209,15 @@ export default function HomeScreen({ navigation }) {
             const updatedTotalCalories = parseInt(rows._array[0].TotalCalories);
             const updatedTotalSugar = parseInt(rows._array[0].TotalSugar);
             const updatedTotalCaffeine = parseInt(rows._array[0].TotalCaffeine);
+            const updatedWaterIntakeGoal = parseInt(rows._array[0].WaterIntake);
+            const updatedCalorieGoal = parseInt(rows._array[0].CalorieGoal);
+            const updatedSugarGoal = parseInt(rows._array[0].SugarGoal);
+            const updatedCaffeineGoal = parseInt(rows._array[0].CaffeineGoal);
+            setWaterIntakeGoal(updatedWaterIntakeGoal);
+            setCalorieGoal(updatedCalorieGoal);
+            setSugarGoal(updatedSugarGoal);
+            setCaffeineGoal(updatedCaffeineGoal);
+            
             setTotalVolume(updatedTotalVolume); // Call setTotalVolume with the retrieved value
             setTotalWaterIntake(updatedTotalWaterIntake);
             setTotalCalories(updatedTotalCalories);
@@ -238,7 +252,7 @@ export default function HomeScreen({ navigation }) {
       return;
     }
 
-    let updatedTotalWaterIntake = 0;
+    let updatedTotalWaterIntake = totalWaterIntake;
     if (drinkName === 'water' || drinkName === 'Water') {
       console.log('Drink is water');
       updatedTotalWaterIntake = totalWaterIntake + parseInt(drinkVolume);
@@ -328,7 +342,11 @@ export default function HomeScreen({ navigation }) {
     //setTaskItems(itemsCopy);
     setDrinkTracker(itemsCopy);
     const updatedTotalVolume = totalVolume - parseInt(DrinkTracker[index].Volume);
-    const updatedTotalWaterIntake = totalWaterIntake - parseInt(DrinkTracker[index].Volume);
+    let updatedTotalWaterIntake = totalWaterIntake;
+    if (DrinkTracker[index].Content === 'water' || DrinkTracker[index].Content === 'Water') {
+      console.log('Drink is water');
+      updatedTotalWaterIntake = totalWaterIntake - parseInt(DrinkTracker[index].Volume);
+    }
     const updatedTotalCalories = totalCalories - Math.round(DrinkTracker[index].Calories);
     const updatedTotalSugar = totalSugar - Math.round(DrinkTracker[index].Sugar);
     const updatedTotalCaffeine = TotalCaffeine - Math.round(DrinkTracker[index].Caffeine);
@@ -430,6 +448,7 @@ export default function HomeScreen({ navigation }) {
     const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
     const yyyy = today.getFullYear();
+
     return `${yyyy}-${mm}-${dd}`; // Changed to ISO 8601 format
   };
   
@@ -447,10 +466,35 @@ export default function HomeScreen({ navigation }) {
   
   // Get the current formatted date
   const currentDate = getCurrentFormattedDate();
+
+  // const saveGroupedItems = (groupedItems) => {
+  //   db.transaction((tx) => {
+  //     for (const day in groupedItems) {
+  //       const items = groupedItems[day];
+  //       for (const item of items) {
+  //         tx.executeSql(
+  //           'INSERT INTO Tracker (TrackerDate, TrackerItem, TrackerCreatedAt) VALUES (?, ?, ?)',
+  //           [day, JSON.stringify(item), item.createdAt],
+  //           (tx, results) => {
+  //             if (results.rowsAffected > 0) {
+  //               console.log('Insert success');
+  //             } else {
+  //               console.log('Insert failed');
+  //             }
+  //           },
+  //           (error) => {
+  //             console.log('Error occurred', error);
+  //           }
+  //         );
+  //       }
+  //     }
+  //   });
+  // };
   
   
   // Group the DrinkTracker items by the day of the week using the current date
   const groupedItems = groupByDayOfWeek(DrinkTracker, currentDate);
+  // saveGroupedItems(groupedItems);
   const [isPressed, setIsPressed] = useState(false);
   const [isSettingsPressed, setIsSettingsPressed] = useState(false);
   const [isAboutPressed, setIsAboutPressed] = useState(false);
@@ -527,6 +571,10 @@ export default function HomeScreen({ navigation }) {
                   <TouchableOpacity style={styles.roundButton} onPress={() => setIsAddMode(true)}>
                     <Text style={styles.buttonText}>+</Text>
                   </TouchableOpacity>
+                  <View style={{marginTop: 5}}>
+                    <Text style={styles.volumeFooter}>Click to add drinks</Text>
+                  </View>
+                  
                   
 
               </View>

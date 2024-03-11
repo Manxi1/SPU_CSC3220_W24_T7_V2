@@ -31,13 +31,62 @@ export default function App() {
   const [sugarGoal, setSugarGoal] = useState(1);
   const [caffeineGoal, setCaffeineGoal] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [fetchedWaterGoal, setFetchedWaterGoal] = useState(1);
+  const [fetchedCalorieGoal, setFetchedCalorieGoal] = useState(1);
+  const [fetchedSugarGoal, setFetchedSugarGoal] = useState(1);
+  const [fetchedCaffeieneGoal, setFetchedCaffeieneGoal] = useState(1);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
     
   };
 
+  const db = SQLite.openDatabase('./siplogV2db.db');
+
+  const fetchGoalsTable = () => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        'SELECT WaterIntake, CalorieGoal, SugarGoal, CaffeineGoal FROM Goal',
+        [],
+        (_, { rows: { _array } }) => {
+          console.log('Fetched Goal table: ', _array);
+            setWaterIntakeGoal(parseInt(_array[0].WaterIntake));
+            setCalorieGoal(parseInt(_array[0].CalorieGoal));
+            setSugarGoal(parseInt(_array[0].SugarGoal));
+            setCaffeineGoal(parseInt(_array[0].CaffeineGoal));
+            console.log('waterGoal: ', fetchedWaterGoal, 'calorieGoal: ', fetchedCalorieGoal, 'sugarGoal: ', fetchedSugarGoal, 'caffeineGoal: ', fetchedCaffeieneGoal);
+        },
+        (_, error) => {
+          console.log('Error fetching from database: ', error);
+        }
+      );
+    });
+  };
+
+  const updateGoalsTable = (waterGoal, calorieGoal, sugarGoal, caffeienGoal) => {
+    console.log('Updating Goal table with: ', waterGoal, calorieGoal, sugarGoal, caffeienGoal);
+    db.transaction((tx) => {
+      tx.executeSql(
+        'UPDATE Goal SET WaterIntake = ?, CalorieGoal = ?, SugarGoal = ?, CaffeineGoal = ?',
+        [waterGoal, calorieGoal, sugarGoal, caffeienGoal],
+        (_, { insertId }) => {
+          console.log('Updated Goal table');
+        },
+        (_, error) => {
+          console.log('3. Error adding to database: ', error);
+        }
+      );
+    });
+  };
+
     return (
       <AppContext.Provider value={{
+        fetchGoalsTable,
+        fetchedWaterGoal,
+        fetchedCalorieGoal,
+        fetchedSugarGoal,
+        fetchedCaffeieneGoal,
+        db,
+        updateGoalsTable,
         totalVolume,
         setTotalVolume,
         totalCalories,
