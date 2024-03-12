@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
       flexWrap: 'wrap',
     },
     modalView:{
-      backgroundColor: 'white',
+      backgroundColor: '#FFF5EE',
       padding: 20,
       borderTopLeftRadius: 50,
       borderTopRightRadius: 50,
@@ -272,11 +272,16 @@ const styles = StyleSheet.create({
     swipeBox:{
       flex: 1,
       borderColor: '#3d3d5c',
-      borderWidth: 2,
+      backgroundColor: '#FFF5EE',
+      borderWidth: 1,
       height: 365, 
       marginHorizontal: 30,
       padding: 20,
       borderRadius: 20, 
+    },
+    suggestionsContainer: {
+      backgroundColor: '#FFF5EE',
+
     },
    suggestionItem: {
     borderRadius: 10,
@@ -313,7 +318,7 @@ const styles = StyleSheet.create({
     },
     alignEclipseNoGoal: {
       position: 'absolute',
-      bottom: -260,
+      bottom: -264,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -330,7 +335,7 @@ const styles = StyleSheet.create({
       width: 10,
         height: 10,
         borderRadius: 50,
-        backgroundColor: 'black',
+        backgroundColor: '#BF40BF',
         marginHorizontal: 5,
     },
     addGoalTitle: {
@@ -340,7 +345,8 @@ const styles = StyleSheet.create({
     },
     timeContainer: {
       alignItems: 'center',
-      padding: 20,
+      paddingTop: 20,
+      paddingBottom: 10,
       borderRadius: 20,
       backgroundColor: '#E0B0FF',
       width: '80%',
@@ -351,14 +357,33 @@ const styles = StyleSheet.create({
       elevation: 5,
       margin: 10,
     },
-    timeText: {
-      textAlign: 'center',
-      fontSize: 25,
-      color: '#FFFFFF',
+    timeFooter: { // Title of the app
+      marginTop: 15,
+      fontSize: 15,
+      fontStyle: 'italic',
+      color: '#484848',
+    },
+    textTimeBubble: {
+      // flexDirection: 'row', 
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: '#BF40BF',
-      padding: 10,
+      width: 50,
+      height: 50,
       borderRadius: 25,
       marginHorizontal: 10,
+    },
+    timeText: {
+      fontSize: 25,
+      color: '#FFFFFF',
+      textAlign: 'center',
+    },
+    timeAbrviation: {
+      position: 'absolute',
+      top: 50,
+      fontSize: 13,
+      fontStyle: 'italic',
+      color: '#484848',
     },
     })
 export default styles;
