@@ -11,7 +11,7 @@ import url3 from './IMG_0007.jpeg'; // Import local image
 const people = [
   { name: 'Manxi .M', age: 20, major: 'Computer Science BS',
    image: url1 , social: 'https://github.com/Manxi1', social1:'https://www.linkedin.com/in/manxi-g/',
-   Bio: 'I am a Computer Science major at the University of Texas at Dallas. I am a senior and I am graduating in May 2022. I am a software developer and I am looking for a job in the tech industry.'},
+   Bio: 'I am a Computer Science major at Seattle Pacific Universtity . I am a sophomore and I am graduating in May 2026. I am a software developer/ software designer and I am internship in the tech industry.'},
   { name: 'Weston .H', age: 20, major: 'Computer Science BS', 
   image: url2, social: 'https://github.com/WestonHanson',social1:'https://www.linkedin.com/in/westonhanson/', 
   Bio: 'I am a Software Engineering major at the University of Texas at Dallas. I am a junior and I am graduating in May 2023. I am a software developer and I am looking for an internship in the tech industry.'},
