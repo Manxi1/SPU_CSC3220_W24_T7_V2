@@ -128,18 +128,29 @@ export default function HomeScreen({ navigation }) {
           </View>
 
           <View style={styles.timeContainer}>
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-              <Text style={styles.timeText}>{24 - currentTime.format('HH')}</Text>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              <View style={styles.textTimeBubble}>
+                <Text style={styles.timeText}>{24 - currentTime.format('HH')}</Text>
+                <Text style={styles.timeAbrviation}>Hr</Text>
+              </View>
+
               <Text style={{textAlign: 'center', fontSize: 20, marginHorizontal: 5, padding: 5 }}>:</Text>
-              <Text style={styles.timeText}>{60 - currentTime.format('mm')}</Text>
+
+              <View style={styles.textTimeBubble}>
+                <Text style={styles.timeText}>{60 - currentTime.format('mm')}</Text>
+                <Text style={styles.timeAbrviation}>Min</Text>
+              </View>
+
               <Text style={{textAlign: 'center', fontSize: 20, marginHorizontal: 5, padding: 5 }}>:</Text>
-              <Text style={styles.timeText}>{60 - currentTime.format('ss')}</Text>
+                
+              <View style={styles.textTimeBubble}>
+                <Text style={styles.timeText}>{60 - currentTime.format('ss')}</Text>
+                <Text style={styles.timeAbrviation}>Sec</Text>
+              </View>
             </View>
-            <View style={{ marginTop: 5}}>
-              {/* <Text style={styles.volumeFooter}>Hours : Minutes : Seconds</Text> */}
-              <Text style={styles.volumeFooter}>Time To Complete Goal</Text>
+            <View style={{ marginTop: 5, justifyContent: 'center', alignItems: 'center' }}>
+              <Text style={styles.timeFooter}>Time To Complete Goal</Text>
             </View>
-            
           </View>
 
           <View style={styles.todaysGoalContainer}>
@@ -156,7 +167,7 @@ export default function HomeScreen({ navigation }) {
                     <Text style={styles.goalsTitle}>Water Intake Goal</Text>
                     {waterIntakeGoal === 1 ? (
                       <>
-                        <Text>Input water intake goal</Text>
+                        <Text style={{ fontSize: 18 }}>Input water intake goal</Text>
                         <View style={styles.alignEclipseNoGoal}>
                           <View style={styles.blackElipses} />
                           <View style={styles.greyElipses} />
@@ -166,8 +177,8 @@ export default function HomeScreen({ navigation }) {
                       </>
                       ) : (
                         <>
-                          <Text>Total: {totalWaterIntake} (ml)</Text>
-                          <Text>Goal: {waterIntakeGoal} (ml)</Text>
+                          <Text style={{ fontSize: 18 }}>Total: {totalWaterIntake} (ml)</Text>
+                          <Text style={{ fontSize: 18 }}>Goal: {waterIntakeGoal} (ml)</Text>
                           <AnimatedCircularProgress
                             size={150} // size of the progress bar
                             width={13} // width of the progress ring
@@ -178,7 +189,7 @@ export default function HomeScreen({ navigation }) {
                             style={{ bottom: -40, position: 'relative'}}
                             children={() => 
                               <View>
-                                <Text>{Math.min(100, Math.round((totalWaterIntake / waterIntakeGoal) * 100))}%</Text>
+                                <Text style={{ fontSize: 18 }}>{Math.min(100, Math.round((totalWaterIntake / waterIntakeGoal) * 100))}%</Text>
                               </View>
                             }
                           />
@@ -198,7 +209,7 @@ export default function HomeScreen({ navigation }) {
                     <Text style={styles.goalsTitle}>Calorie Intake Goal</Text>
                     {calorieGoal === 1 ? (
                       <>
-                        <Text>Input calorie goal</Text>
+                        <Text style={{ fontSize: 18 }}>Input calorie goal</Text>
                         <View style={styles.alignEclipseNoGoal}>
                           <View style={styles.greyElipses} />
                           <View style={styles.blackElipses} />
@@ -208,8 +219,8 @@ export default function HomeScreen({ navigation }) {
                       </>
                       ) : (
                         <>
-                          <Text>Total: {totalCalories} (kcal)</Text>
-                          <Text>Calorie Goal: {calorieGoal} (kcal)</Text>
+                          <Text style={{ fontSize: 18 }}>Total: {totalCalories} (kcal)</Text>
+                          <Text style={{ fontSize: 18 }}>Goal: {calorieGoal} (kcal)</Text>
                           <AnimatedCircularProgress
                             size={150} // size of the progress bar
                             width={13} // width of the progress ring
@@ -220,7 +231,7 @@ export default function HomeScreen({ navigation }) {
                             style={{ bottom: -40, position: 'relative'}}
                             children={() => 
                               <View>
-                                <Text>{Math.min(100, Math.round((totalCalories / calorieGoal) * 100))}%</Text>
+                                <Text style={{ fontSize: 18 }}>{Math.min(100, Math.round((totalCalories / calorieGoal) * 100))}%</Text>
                               </View>
                             }
                           />
@@ -240,7 +251,7 @@ export default function HomeScreen({ navigation }) {
                     <Text style={styles.goalsTitle}>Sugar Intake Goal</Text>
                     {sugarGoal === 1 ? (
                       <>
-                        <Text>Input sugar goal</Text>
+                        <Text style={{ fontSize: 18 }}>Input sugar goal</Text>
                         <View style={styles.alignEclipseNoGoal}>
                           <View style={styles.greyElipses} />
                           <View style={styles.greyElipses} />
@@ -250,8 +261,8 @@ export default function HomeScreen({ navigation }) {
                       </>
                       ) : (
                         <>
-                          <Text>Total: {totalSugar} (g)</Text>
-                          <Text>Sugar Goal: {sugarGoal} (g)</Text>
+                          <Text style={{ fontSize: 18 }}>Total: {totalSugar} (g)</Text>
+                          <Text style={{ fontSize: 18 }}>Goal: {sugarGoal} (g)</Text>
                           <AnimatedCircularProgress
                             size={150} // size of the progress bar
                             width={13} // width of the progress ring
@@ -262,7 +273,7 @@ export default function HomeScreen({ navigation }) {
                             style={{ bottom: -40, position: 'relative'}}
                             children={() => 
                               <View>
-                                <Text>{Math.min(100, Math.round((totalSugar / sugarGoal) * 100))}%</Text>
+                                <Text style={{ fontSize: 18 }}>{Math.min(100, Math.round((totalSugar / sugarGoal) * 100))}%</Text>
                               </View>
                             }
                           />
@@ -282,7 +293,7 @@ export default function HomeScreen({ navigation }) {
                     <Text style={styles.goalsTitle}>Caffeine Intake Goal</Text>
                     {caffeineGoal === 1 ? (
                       <>
-                        <Text>Input caffeine goal</Text>
+                        <Text style={{ fontSize: 18 }}>Input caffeine goal</Text>
                         <View style={styles.alignEclipseNoGoal}>
                           <View style={styles.greyElipses} />
                           <View style={styles.greyElipses} />
@@ -292,8 +303,8 @@ export default function HomeScreen({ navigation }) {
                       </>
                       ) : (
                         <>
-                          <Text>Total: {TotalCaffeine} (mg)</Text>
-                          <Text>Caffeine Goal: {caffeineGoal} (mg)</Text>
+                          <Text style={{ fontSize: 18 }}>Total: {TotalCaffeine} (mg)</Text>
+                          <Text style={{ fontSize: 18 }}>Goal: {caffeineGoal} (mg)</Text>
                           <AnimatedCircularProgress
                             size={150} // size of the progress bar
                             width={13} // width of the progress ring
@@ -304,7 +315,7 @@ export default function HomeScreen({ navigation }) {
                             style={{ bottom: -40, position: 'relative'}}
                             children={() => 
                               <View>
-                                <Text>{Math.min(100, Math.round((TotalCaffeine / caffeineGoal) * 100))}%</Text>
+                                <Text style={{ fontSize: 18 }}>{Math.min(100, Math.round((TotalCaffeine / caffeineGoal) * 100))}%</Text>
                               </View>
                             }
                           />

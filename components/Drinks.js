@@ -38,14 +38,16 @@ const Drink = (props) => {
           </View>
         </View>
         {isBarVisible && (
-          <View style={drinkStyles.floatingBar}>
-            <Text style={drinkStyles.inputBar}>Notes: {props.notes ? props.notes : 'No notes  provided'}</Text>
-            <Text>Calories: {props.calories || 0} (kcals)</Text>
-            <Text>Sugar: {props.sugar || 0} (g)</Text>
-            <Text>Caffeine: {props.caffeine || 0} (mg)</Text>
-            <TouchableOpacity onPress={handleClosePress} style={drinkStyles.floatingBarBackButton}>
-              <Text style={drinkStyles.closingbuttonText}>Back</Text>
-            </TouchableOpacity>
+          <View style={drinkStyles.floatingBarBlack}>
+            <View style={drinkStyles.floatingBar}>
+              <Text style={drinkStyles.inputBar}>Notes: {props.notes ? props.notes : 'No notes  provided'}</Text>
+              <Text>Calories: {props.calories || 0} (kcals)</Text>
+              <Text>Sugar: {props.sugar || 0} (g)</Text>
+              <Text>Caffeine: {props.caffeine || 0} (mg)</Text>
+              <TouchableOpacity onPress={handleClosePress} style={drinkStyles.floatingBarBackButton}>
+                <Text style={drinkStyles.closingbuttonText}>Back</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       </View>
