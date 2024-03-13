@@ -161,7 +161,7 @@ export default function HomeScreen({ navigation }) {
                             size={150} // size of the progress bar
                             width={13} // width of the progress ring
                             fill={totalWaterIntake ? (totalWaterIntake/waterIntakeGoal)*100 : 0.01} // percentage of the progress
-                            tintColor="#00FF00" // color of the progress bar
+                            tintColor="#4CB2AF" // color of the progress bar
                             backgroundColor="#D3D3D3" // color of the remaining progress
                             rotation={0} // start position of the progress bar
                             style={{ bottom: -40, position: 'relative'}}
@@ -203,7 +203,7 @@ export default function HomeScreen({ navigation }) {
                             size={150} // size of the progress bar
                             width={13} // width of the progress ring
                             fill={totalCalories ? (totalCalories/calorieGoal)*100 : 0.01} // percentage of the progress
-                            tintColor="#00FF00" // color of the progress bar
+                            tintColor="#4CB2AF" // color of the progress bar
                             backgroundColor="#D3D3D3" // color of the remaining progress
                             rotation={0} // start position of the progress bar
                             style={{ bottom: -40, position: 'relative'}}
@@ -245,7 +245,7 @@ export default function HomeScreen({ navigation }) {
                             size={150} // size of the progress bar
                             width={13} // width of the progress ring
                             fill={totalSugar ? (totalSugar/sugarGoal)*100 : 0.01} // percentage of the progress
-                            tintColor="#00FF00" // color of the progress bar
+                            tintColor="#4CB2AF" // color of the progress bar
                             backgroundColor="#D3D3D3" // color of the remaining progress
                             rotation={0} // start position of the progress bar
                             style={{ bottom: -40, position: 'relative'}}
@@ -287,7 +287,7 @@ export default function HomeScreen({ navigation }) {
                             size={150} // size of the progress bar
                             width={13} // width of the progress ring
                             fill={TotalCaffeine ? (TotalCaffeine/caffeineGoal)*100 : 0.01} // percentage of the progress
-                            tintColor="#00FF00" // color of the progress bar
+                            tintColor="#4CB2AF" // color of the progress bar
                             backgroundColor="#D3D3D3" // color of the remaining progress
                             rotation={0} // start position of the progress bar
                             style={{ bottom: -40, position: 'relative'}}
