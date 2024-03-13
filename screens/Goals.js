@@ -63,6 +63,12 @@ export default function HomeScreen({ navigation }) {
     }, [counter])
   );
 
+  useFocusEffect(
+    React.useCallback(() => {
+      // Your refresh logic here
+      setIsMenuOpen(false);
+    }, [])
+  );
 
   const onSwipeLeft = () => {
     setSwipeCount(swipeCount + 1);

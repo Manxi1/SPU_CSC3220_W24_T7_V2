@@ -14,7 +14,7 @@ const people = [
    Bio: 'I am a Computer Science major at the University of Texas at Dallas. I am a senior and I am graduating in May 2022. I am a software developer and I am looking for a job in the tech industry.'},
   { name: 'Weston .H', age: 20, major: 'Computer Science BS', 
   image: url2, social: 'https://github.com/WestonHanson',social1:'https://www.linkedin.com/in/westonhanson/', 
-  Bio: 'I am a Software Engineering major at the University of Texas at Dallas. I am a junior and I am graduating in May 2023. I am a software developer and I am looking for an internship in the tech industry.'},
+  Bio: 'I am a Computer Science major and Biology minor at Seattle Pacific University. I am a junior and I am graduating in May 2025. I am a software developer and I am looking for an internship in BioTech.'},
   { name: 'Caed .O', age: 20, major: 'Information Systems', image: url3,
    social: 'https://github.com/caedosbornnienhuis', social1:'',
    Bio: 'I am an Information Systems major at the University of Texas at Dallas. I am a senior and I am graduating in May 2022. I am a software developer and I am looking for a job in the tech industry.'},

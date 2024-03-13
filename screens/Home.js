@@ -11,6 +11,7 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import drinksData from './Drinksdata.js';
 // import db from '../database.js';
 import { useFocusEffect } from '@react-navigation/native';
+import { LogBox } from 'react-native';
 
 
 
@@ -44,6 +45,7 @@ export default function HomeScreen({ navigation }) {
     setCalorieGoal, sugarGoal, setSugarGoal, caffeineGoal, setCaffeineGoal } = useContext(AppContext);
   // const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
   // const db = SQLite.openDatabase('./siplogV2db.db');
+  LogBox.ignoreLogs(['new NativeEventEmitter()']);
 
   useEffect(() => {
     // Create table if not exists
