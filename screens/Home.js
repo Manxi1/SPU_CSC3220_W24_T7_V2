@@ -302,8 +302,8 @@ export default function HomeScreen({ navigation }) {
     // Insert the new drink into the database
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO Drink (Content, Volume , Notes, Calories, Sugar, Caffeine) VALUES (?, ?, ?, ?, ?, ?)',
-        [drinkName, parseInt(drinkVolume), drinknotes, updatedDrinkCalories, updatedDrinkSugar, updatedDrinkCaffeine],
+        'INSERT INTO Drink (Content, Volume , Notes, Calories, Sugar, Caffeine, TrackerDay) VALUES (?, ?, ?, ?, ?, ?)',
+        [drinkName, parseInt(drinkVolume), drinknotes, updatedDrinkCalories, updatedDrinkSugar, updatedDrinkCaffeine,, getDayOfWeek(currentDate)],
         (_, { insertId }) => {
           console.log('Added to database with ID: ', insertId);
           fetchDrinkTracker(); // Fetch updated DrinkTracker after adding
@@ -447,11 +447,11 @@ export default function HomeScreen({ navigation }) {
   // Function to format the date as MM-DD-YYYY
   const getCurrentFormattedDate = () => {
     const today = new Date();
-    const mm = String(today.getMonth() + 1).padStart(2, '0');
     const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
     const yyyy = today.getFullYear();
-
-    return `${yyyy}-${mm}-${dd}`; // Changed to ISO 8601 format
+  
+    return `${yyyy}-${mm}-${dd}`; // Changed to ISO 8601 format (YYYY-MM-DD)
   };
   
   // Function to group items by the day of the week
