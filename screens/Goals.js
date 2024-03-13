@@ -1,10 +1,6 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Alert, Animated, Image } from 'react-native';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Modal, PanResponder} from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { Text, View, TextInput, TouchableOpacity, Keyboard, Modal } from 'react-native';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { useRoute } from '@react-navigation/native';
-import { TabView, SceneMap } from 'react-native-tab-view';
-import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles.js';
 import AppContext from '../AppContextAPI'; 
@@ -14,21 +10,12 @@ import { useFocusEffect } from '@react-navigation/native';
 
 
 export default function HomeScreen({ navigation }) {
-  const { fetchGoalsTable, fetchedWaterGoal,
-    fetchedCalorieGoal,
-    fetchedSugarGoal,
-    fetchedCaffeieneGoal, db, updateGoalsTable, totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
-    totalSugar, setTotalSugar, totalWaterIntake, setTotalWaterIntake,
-    TotalCaffeine, setTotalCaffeine, waterIntakeGoal, setWaterIntakeGoal, calorieGoal, 
+  const { fetchGoalsTable, updateGoalsTable, totalCalories,
+    totalSugar, totalWaterIntake,
+    TotalCaffeine, waterIntakeGoal, setWaterIntakeGoal, calorieGoal, 
     setCalorieGoal, sugarGoal, setSugarGoal, caffeineGoal, setCaffeineGoal } = useContext(AppContext);
   const [isAddMode, setIsAddMode] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
-  const [isUpdateGoalPopup, setUpdateGoalPopup] = useState(false);
-  const [waterView, setWaterView] = useState(false);
-  const [calorieView, setCalorieView] = useState(false);
-  const [sugarView, setSugarView] = useState(false);
-  const [caffeineView, setCaffeineView] = useState(false);
   const [swipeCount, setSwipeCount] = useState(0);
   const [currentTime, setCurrentTime] = useState(moment());
 
@@ -88,18 +75,6 @@ export default function HomeScreen({ navigation }) {
     directionalOffsetThreshold: 80,
   };
 
-  const updateProgressBar = () => {
-    setCount(count + 5);
-  };
-
-  const resetCount = () => {
-    setCount(0);
-  };
-  
-  const toggleUpdateGoal = () => {
-    setUpdateGoalPopup(!isUpdateGoalPopup);
-  };
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen); // Toggle menu visibility
   };
@@ -108,9 +83,6 @@ export default function HomeScreen({ navigation }) {
     Keyboard.dismiss();
     setIsAddMode(false);
    
-    const handleBackButton = () => {
-      setIsMenuOpen(false); // Close the menu
-    };
     console.log('Water Goal Input:', waterIntakeGoal);
     updateGoalsTable(waterIntakeGoal, calorieGoal, sugarGoal, caffeineGoal);
   

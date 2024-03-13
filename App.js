@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView, Modal,Button, Settings } from 'react-native';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// import Drink from './components/Drinks.js';
-// import { StatusBar } from 'expo-status-bar';
 import * as SQLite from 'expo-sqlite';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import HomeScreen from './screens/Home';
 import AboutScreen from './screens/About';
 import SettingsScreen from './screens/Settings';
@@ -16,11 +13,6 @@ import AppContext from './AppContextAPI';
 const Stack = createNativeStackNavigator(); 
 
 export default function App() {
-  // const [drinkName, setDrinkName] = useState(''); 
-  // const [drinkVolume, setDrinkVolume] = useState('');
-  // const [taskItems, setTaskItems] = useState([]);
-  // const [isAddMode, setIsAddMode] = useState(false);
-  // const [messages, setMessages] = useState([]);
   const [totalVolume, setTotalVolume] = useState(0);
   const [totalCalories, setTotalCalories] = useState(0);
   const [totalSugar, setTotalSugar] = useState(0);
@@ -135,7 +127,6 @@ export default function App() {
                     component={SettingsScreen}
                     />
             </Stack.Navigator>
-
         </NavigationContainer>
       </AppContext.Provider>
     );

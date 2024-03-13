@@ -6,7 +6,6 @@ const drinkStyles = StyleSheet.create({
     },
     itemContainer: {
       position: 'relative',
-      
     },
     item: {
       backgroundColor: 'lightgrey',
