@@ -132,10 +132,6 @@ const styles = StyleSheet.create({
       borderTopRightRadius: 50,
       width: '106%',
       bottom: 0,
-      // flexDirection: 'row',
-      // justifyContent: 'space-between',
-      // alignItems: 'center',
-      //flexWrap: 'wrap',
     },
     input:{
       paddingVertical: 15,
@@ -165,7 +161,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
     },
-     // ... other styles ...
   underline: {
     textDecorationLine: 'underline',
   },
@@ -179,16 +174,13 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
     },
     MenuItemes: {
-  
        flex: 2,
        right: 5,
        top: 20,
-      
     },
      MenuItemestext:{
       fontFamily: 'Roboto',
       fontSize:21,
-  
      },
      inputMessage: {
       paddingVertical: 15,
@@ -364,7 +356,6 @@ const styles = StyleSheet.create({
       color: '#484848',
     },
     textTimeBubble: {
-      // flexDirection: 'row', 
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: '#BF40BF',

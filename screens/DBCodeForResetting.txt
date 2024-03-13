@@ -1,0 +1,39 @@
+// db.transaction(tx => {
+        //   tx.executeSql(
+        //     'INSERT INTO Goal (TotalVolume, TotalWaterIntake, TotalCalories, TotalSugar, TotalCaffeine, WaterIntake, CalorieGoal, SugarGoal, CaffeineGoal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        //     [0, 0, 0, 0, 0, 1, 1, 1, 1], // Replace with the values you want to insert
+        //     (_, result) => {
+        //       console.log('Row inserted into Goal');
+        //     },
+        //     (_, error) => {
+        //       console.log('Error inserting row into Goal: ', error);
+        //     }
+        //   );
+        // });
+
+        // db.transaction(tx => {
+        //   tx.executeSql(
+        //     'DELETE FROM Goal',
+        //     [],
+        //     (_, result) => {
+        //       console.log('All rows deleted from Goal');
+        //     },
+        //     (_, error) => {
+        //       console.log('Error deleting rows from Goal: ', error);
+        //     }
+        //   );
+        // });
+
+        // db.transaction(tx => {
+        //   tx.executeSql(
+        //       `ALTER TABLE Tracker ADD COLUMN TrackerDay TEXT NOT NULL,
+        //       TrackerItem TEXT NOT NULL,
+        //       TrackerCreatedAt TEXT NOT NULL,`, [],
+        //       () => {
+        //           console.log('NewColumn added to Drink table successfully');
+        //       },
+        //       (_, error) => {
+        //           console.error('Error adding NewColumn to Drink table:', error);
+        //       }
+        //   );
+        // });

@@ -1,15 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Alert } from 'react-native';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, Modal} from 'react-native';
+import { Text, View, TextInput, TouchableOpacity, Keyboard, Modal} from 'react-native';
 import Drink from '../components/Drinks.js';
-import { StatusBar } from 'expo-status-bar';
-import * as SQLite from 'expo-sqlite';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import styles from './styles.js';
 import AppContext from '../AppContextAPI'; 
-import ModalDropdown from 'react-native-modal-dropdown';
 import drinksData from './Drinksdata.js';
-// import db from '../database.js';
 import { useFocusEffect } from '@react-navigation/native';
 import { LogBox } from 'react-native';
 
@@ -31,21 +27,12 @@ export default function HomeScreen({ navigation }) {
   const [isTotalPopVisible, setIsTotalPopVisible] = useState(false);
   const [selectedDrinkInfo, setSelectedDrinkInfo] = useState({ sugar: 0, caffeine: 0, calories: 0 }); // New state for selected drink info  
 
-  
-  // const [totalVolume, setTotalVolume] = useState(0);
-  // const [totalCalories, setTotalCalories] = useState(0);
-  // const [totalSugar, setTotalSugar] = useState(0);
-  // const [TotalCaffeine, setTotalCaffeine] = useState(0);
-  const { fetchGoalsTable, fetchedWaterGoal,
-    fetchedCalorieGoal,
-    fetchedSugarGoal,
-    fetchedCaffeieneGoal, db, updateGoalsTable, totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
+  const { db, totalVolume, setTotalVolume, totalCalories, setTotalCalories, 
     totalSugar, setTotalSugar, totalWaterIntake, setTotalWaterIntake,
-    TotalCaffeine, setTotalCaffeine, waterIntakeGoal, setWaterIntakeGoal, calorieGoal, 
-    setCalorieGoal, sugarGoal, setSugarGoal, caffeineGoal, setCaffeineGoal } = useContext(AppContext);
-  // const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
-  // const db = SQLite.openDatabase('./siplogV2db.db');
-  // LogBox.ignoreLogs(['new NativeEventEmitter()']);
+    TotalCaffeine, setTotalCaffeine, setWaterIntakeGoal,
+    setCalorieGoal, setSugarGoal, setCaffeineGoal } = useContext(AppContext);
+
+  LogBox.ignoreLogs(['new NativeEventEmitter()']);
 
   useEffect(() => {
     // Create table if not exists
@@ -118,46 +105,6 @@ export default function HomeScreen({ navigation }) {
               console.error('Error creating Tracker Table:', error);
             }
         );
-
-        // db.transaction(tx => {
-        //   tx.executeSql(
-        //     'INSERT INTO Goal (TotalVolume, TotalWaterIntake, TotalCalories, TotalSugar, TotalCaffeine, WaterIntake, CalorieGoal, SugarGoal, CaffeineGoal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        //     [0, 0, 0, 0, 0, 1, 1, 1, 1], // Replace with the values you want to insert
-        //     (_, result) => {
-        //       console.log('Row inserted into Goal');
-        //     },
-        //     (_, error) => {
-        //       console.log('Error inserting row into Goal: ', error);
-        //     }
-        //   );
-        // });
-
-        // db.transaction(tx => {
-        //   tx.executeSql(
-        //     'DELETE FROM Goal',
-        //     [],
-        //     (_, result) => {
-        //       console.log('All rows deleted from Goal');
-        //     },
-        //     (_, error) => {
-        //       console.log('Error deleting rows from Goal: ', error);
-        //     }
-        //   );
-        // });
-
-        // db.transaction(tx => {
-        //   tx.executeSql(
-        //       `ALTER TABLE Tracker ADD COLUMN TrackerDay TEXT NOT NULL,
-        //       TrackerItem TEXT NOT NULL,
-        //       TrackerCreatedAt TEXT NOT NULL,`, [],
-        //       () => {
-        //           console.log('NewColumn added to Drink table successfully');
-        //       },
-        //       (_, error) => {
-        //           console.error('Error adding NewColumn to Drink table:', error);
-        //       }
-        //   );
-        // });
     });
 
   }, []);
@@ -313,17 +260,6 @@ export default function HomeScreen({ navigation }) {
         }
       );
 
-      // tx.executeSql( // Update Goal table with the totalVolume state
-      //   'UPDATE Goal Set TotalVolume = ? ',
-      //   [parseInt(updatedTotalVolume)],
-      //   (_, { insertId }) => {
-      //     console.log('Updated Goal table');
-      //     fetchGoal(); // Fetch updated DrinkTracker after adding
-      //   },
-      //   (_, error) => {
-      //     console.log('3. Error adding to database: ', error);
-      //   }
-      // );
       tx.executeSql(
         'UPDATE Goal SET TotalWaterIntake = ?, TotalVolume = ?, TotalCalories = ?, TotalSugar = ?, TotalCaffeine = ?',
         [updatedTotalWaterIntake, parseInt(updatedTotalVolume), updatedTotalCalories, updatedTotalSugar, updatedTotalCaffeine],
@@ -396,9 +332,6 @@ export default function HomeScreen({ navigation }) {
     setSearchTerm(text);
     // Perform your search logic here to get suggestions based on the input text
     // For simplicity, I'm just filtering the predefined drinksData array
-    // console.log('Text:', text);
-    // console.log('Drink Data:', drinksData);
-    // const filteredSuggestions = drinksData.filter(drink => drink.name.toLowerCase().includes(text.toLowerCase()))
     const filteredSuggestions = drinksData[0]
       .filter(drink => drink.name && drink.name.toLowerCase().includes(text.toLowerCase()))
       .map(drink => drink.name)
@@ -414,7 +347,6 @@ export default function HomeScreen({ navigation }) {
     setDrinkName(drinkname); // Update the drinkName state with the selected drink name
 
     // Find the selected drink from drinksData
-    // const selected = drinksData.find(drink => drink.name === drinkname);
     const selected = drinksData[0].find(drink => drink.name.trim().toLowerCase() === drinkname.trim().toLowerCase());
     console.log('Selected Drink:', selected);
     console.log('Selected Drink Info:', selected.sugar, selected.caffeine, selected.calories);
@@ -468,35 +400,9 @@ export default function HomeScreen({ navigation }) {
   
   // Get the current formatted date
   const currentDate = getCurrentFormattedDate();
-
-  // const saveGroupedItems = (groupedItems) => {
-  //   db.transaction((tx) => {
-  //     for (const day in groupedItems) {
-  //       const items = groupedItems[day];
-  //       for (const item of items) {
-  //         tx.executeSql(
-  //           'INSERT INTO Tracker (TrackerDate, TrackerItem, TrackerCreatedAt) VALUES (?, ?, ?)',
-  //           [day, JSON.stringify(item), item.createdAt],
-  //           (tx, results) => {
-  //             if (results.rowsAffected > 0) {
-  //               console.log('Insert success');
-  //             } else {
-  //               console.log('Insert failed');
-  //             }
-  //           },
-  //           (error) => {
-  //             console.log('Error occurred', error);
-  //           }
-  //         );
-  //       }
-  //     }
-  //   });
-  // };
-  
   
   // Group the DrinkTracker items by the day of the week using the current date
   const groupedItems = groupByDayOfWeek(DrinkTracker, currentDate);
-  // saveGroupedItems(groupedItems);
   const [isPressed, setIsPressed] = useState(false);
   const [isSettingsPressed, setIsSettingsPressed] = useState(false);
   const [isAboutPressed, setIsAboutPressed] = useState(false);
@@ -559,9 +465,6 @@ export default function HomeScreen({ navigation }) {
                           <Text>Total Calories: {totalCalories} (kcal)</Text>
                           <Text>Total Sugar: {totalSugar} (g)</Text>
                           <Text>Total Caffeine: {TotalCaffeine} (mg)</Text>
-                          {/* <TouchableOpacity onPress={resetGoalsTable} style={styles.totalPopupClose}>
-                            <Text style={styles.addText}>Reset</Text>
-                          </TouchableOpacity> */}
                           <TouchableOpacity onPress={() => setIsTotalPopVisible(false)} style={styles.totalPopupClose}>
                             <Text style={styles.addText}>Close</Text>
                           </TouchableOpacity>
