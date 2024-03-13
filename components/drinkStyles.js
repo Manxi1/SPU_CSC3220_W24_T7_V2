@@ -49,7 +49,6 @@ const drinkStyles = StyleSheet.create({
       bottom: -39,
       right: 0,
       width: 300,
-      //height: '300%',
       flexGrow: 1,
       backgroundColor: '#B6D0E2',
       justifyContent: 'center',

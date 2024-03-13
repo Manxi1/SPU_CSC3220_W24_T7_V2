@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
       width: 10,
         height: 10,
         borderRadius: 50,
-        backgroundColor: 'grey',
+        backgroundColor: 'lightgrey',
         marginHorizontal: 5,
     },
     blackElipses: {
