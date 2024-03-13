@@ -45,7 +45,7 @@ export default function HomeScreen({ navigation }) {
     setCalorieGoal, sugarGoal, setSugarGoal, caffeineGoal, setCaffeineGoal } = useContext(AppContext);
   // const db = SQLite.openDatabase('./siplogV2.db'); //Database constant
   // const db = SQLite.openDatabase('./siplogV2db.db');
-  LogBox.ignoreLogs(['new NativeEventEmitter()']);
+  // LogBox.ignoreLogs(['new NativeEventEmitter()']);
 
   useEffect(() => {
     // Create table if not exists
@@ -121,8 +121,8 @@ export default function HomeScreen({ navigation }) {
 
         // db.transaction(tx => {
         //   tx.executeSql(
-        //     'INSERT INTO Goal (WaterIntake) VALUES (?)',
-        //     [0], // Replace with the value you want to insert
+        //     'INSERT INTO Goal (TotalVolume, TotalWaterIntake, TotalCalories, TotalSugar, TotalCaffeine, WaterIntake, CalorieGoal, SugarGoal, CaffeineGoal) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        //     [0, 0, 0, 0, 0, 1, 1, 1, 1], // Replace with the values you want to insert
         //     (_, result) => {
         //       console.log('Row inserted into Goal');
         //     },
@@ -302,8 +302,8 @@ export default function HomeScreen({ navigation }) {
     // Insert the new drink into the database
     db.transaction(tx => {
       tx.executeSql(
-        'INSERT INTO Drink (Content, Volume , Notes, Calories, Sugar, Caffeine, TrackerDay) VALUES (?, ?, ?, ?, ?, ?)',
-        [drinkName, parseInt(drinkVolume), drinknotes, updatedDrinkCalories, updatedDrinkSugar, updatedDrinkCaffeine,, getDayOfWeek(currentDate)],
+        'INSERT INTO Drink (Content, Volume , Notes, Calories, Sugar, Caffeine) VALUES (?, ?, ?, ?, ?, ?)',
+        [drinkName, parseInt(drinkVolume), drinknotes, updatedDrinkCalories, updatedDrinkSugar, updatedDrinkCaffeine],
         (_, { insertId }) => {
           console.log('Added to database with ID: ', insertId);
           fetchDrinkTracker(); // Fetch updated DrinkTracker after adding
