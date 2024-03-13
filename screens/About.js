@@ -16,8 +16,8 @@ const people = [
   image: url2, social: 'https://github.com/WestonHanson',social1:'https://www.linkedin.com/in/westonhanson/', 
   Bio: 'I am a Software Engineering major at the University of Texas at Dallas. I am a junior and I am graduating in May 2023. I am a software developer and I am looking for an internship in the tech industry.'},
   { name: 'Caed .O', age: 20, major: 'Information Systems', image: url3,
-   social: 'https://github.com/caedosbornnienhuis', social1:'',
-   Bio: 'I am an Information Systems major at the University of Texas at Dallas. I am a senior and I am graduating in May 2022. I am a software developer and I am looking for a job in the tech industry.'},
+   social: 'https://github.com/caedosbornnienhuis', social1:'https://www.linkedin.com/in/caed-osborn-nienhuis-a1a95b256/',
+   Bio: 'I am a Computer Science major at Seattle Pacific University. I am a Sophomore and will graduate in June 2026. I currently work in IT, and am looking for internships in the tech industry.'},
 ];
 
 export default function AboutPage({ navigation }) {
